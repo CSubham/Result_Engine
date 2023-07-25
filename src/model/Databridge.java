@@ -2,15 +2,18 @@ package model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Databridge {
 
-    public static void main(String[] args) {
-        connectDatabase();
-    }
 
-    public static void connectDatabase() {
+    private Connection connection = null;
+
+    // establishes connection with the database.
+
+    public void connectDatabase() {
         // Database connection details
 
         // String url =
@@ -24,8 +27,6 @@ public class Databridge {
         String user = "oiohghwy";
         String password = "g_boOl3p-FtPxXCs5sEF-q4pqJvWx8IE";
 
-        Connection connection = null;
-
         try {
 
             Class.forName("org.postgresql.Driver");
@@ -33,17 +34,56 @@ public class Databridge {
             connection = DriverManager.getConnection(url, user, password);
 
             if (connection != null) {
-                System.out.println("Connected to the database successfully!");
+                System.out.println("Database connection status : Positive");
             }
         } catch (ClassNotFoundException e) {
             System.err.println(
                     "Could not find the PostgreSQL JDBC driver. Please include the JDBC driver in your project, \n or download it from the website.");
             e.printStackTrace();
         } catch (SQLException e) {
-            System.err.println("Error occurred while connecting to the database.");
+            System.err.println("Database connection status : Negative");
             e.printStackTrace();
         }
 
+    }
+
+    // executes queries which will return nothing
+
+    public void executeQuery(String query) {
+        Statement statement;
+        try {
+            statement = getConnection().createStatement();
+            statement.executeUpdate(query);
+            System.out.println("Query : Executed");
+
+        } catch (Exception e) {
+            System.out.println("Query : Execution failed");
+
+            System.out.println(e);
+        }
+
+    }
+
+    // fetches a single result set for the given data
+
+    public ResultSet fetchQueryData(String query) {
+        Statement statement;
+        ResultSet resultSet = null;
+        try {
+            statement = getConnection().createStatement();
+            resultSet = statement.executeQuery(query);
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return resultSet;
+
+    }
+
+ 
+
+    private Connection getConnection() {
+        return connection;
     }
 
 }
