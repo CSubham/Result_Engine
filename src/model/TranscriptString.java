@@ -67,7 +67,7 @@ public class TranscriptString {
         for (int i = 0; i < marks.length; i++) {
 
             String[] flag = marks[i].split("-");
-            studentHM.put(Integer.parseInt(flag[0]), str);
+            studentHM.put(Integer.parseInt(flag[0]), flag[1]);
 
         }
 

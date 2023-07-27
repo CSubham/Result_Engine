@@ -82,8 +82,12 @@ public class Databridge {
 
  
 
-    private Connection getConnection() {
+    public Connection getConnection() {
         return connection;
     }
+
+    
+
+  
 
 }
