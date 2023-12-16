@@ -6,8 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Databridge {
-
+public class DataBridge {
 
     private Connection connection = null;
 
@@ -80,14 +79,8 @@ public class Databridge {
 
     }
 
- 
-
     public Connection getConnection() {
         return connection;
     }
-
-    
-
-  
 
 }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="MainScreenAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="496.0" prefWidth="949.0" stylesheets="@MainScreen.css" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.MainScreenController">
+   <children>
+      <Label layoutX="39.0" layoutY="46.0" prefHeight="229.0" prefWidth="417.0" styleClass="typing-animation" stylesheets="@Buttons.css" text="Label" />
+   </children>
+</AnchorPane>

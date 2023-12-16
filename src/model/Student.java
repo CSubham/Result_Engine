@@ -2,24 +2,38 @@ package model;
 
 import java.util.HashMap;
 
-
-
 public class Student {
 
     private int roll_no;
     private int pin;
     private String name;
-    private HashMap<Integer, String> subjects;
+    private HashMap<Integer, Integer> subjects;
+    private int[] secondLanguage;
+    private int[] thirdLanguage;
 
     // class basically, as we cannot use it being reserved
     private String grade;
 
-    public Student(int roll_no, int pin, String name, HashMap<Integer, String> subjects, String grade) {
+    public  Student(int roll_no, int pin, String name, HashMap<Integer, Integer> subjects, String grade) {
         this.roll_no = roll_no;
         this.pin = pin;
         this.name = name;
         this.subjects = subjects;
         this.grade = grade;
+        this.secondLanguage = null;
+        this.thirdLanguage = null;
+    }
+
+    public Student(int roll_no, int pin, String name, HashMap<Integer, Integer> subjects, String grade,
+            int[] secondLanguage, int [] thirdLanguage) {
+
+        this.roll_no = roll_no;
+        this.pin = pin;
+        this.name = name;
+        this.subjects = subjects;
+        this.grade = grade;
+        this.secondLanguage = secondLanguage;
+        this.thirdLanguage = thirdLanguage;
     }
 
     public int getRoll_no() {
@@ -46,11 +60,11 @@ public class Student {
         this.name = name;
     }
 
-    public HashMap<Integer, String> getSubjects() {
+    public HashMap<Integer, Integer> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(HashMap<Integer, String> subjects) {
+    public void setSubjects(HashMap<Integer, Integer> subjects) {
         this.subjects = subjects;
     }
 
@@ -62,9 +76,21 @@ public class Student {
         this.grade = grade;
     }
 
-  
+    public int[] getSecondLanguage() {
+        return secondLanguage;
+    }
 
+    public void setSecondLanguage(int[] secondLanguage) {
+        this.secondLanguage = secondLanguage;
+    }
 
-    
+    public int[] getThirdLanguage() {
+        return thirdLanguage;
+    }
 
+    public void setThirdLanguage(int[] thirdLanguage) {
+        this.thirdLanguage = thirdLanguage;
+    }
+
+   
 }

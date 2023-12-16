@@ -2,7 +2,13 @@ package model;
 
 import java.sql.ResultSet;
 import java.util.HashMap;
-import java.util.Map;
+
+import model.Condition_blocks.Compulsory;
+import model.Condition_blocks.ConditionBlock;
+import model.Condition_blocks.MixedValue;
+import model.Condition_blocks.Value;
+import model.enums.Operator;
+import model.enums.SubjectSignificance;
 
 public class Result {
     // ensure that the class is made to handle only the data of one student at a
@@ -15,48 +21,149 @@ public class Result {
         this.subjectKeys = subjectKeys;
     }
 
-    // String[] array =
-    // {"english_language","english_literature","spelling_dictation","general_knowledge","second_language",
-    // "mathematics","science","value_education","social_studies","computer_science","third_language","reading",
-    // "recitation","art","physics","chemistry","biology","computer_application","commercial_application","physical_education",
-    // "accountancy","commerce","economics","sociology","history","geography","pol_science","supw","business_studies",
-    // "conduct","physical_training","singing","order_n_neatness","handwriting","attendance","co_curricular_activities",
-    // "spoken_language","personal_grooming","hobby","library_reading","supw","cooperation"
-    // };
+    // a function which has a student object and a condition object
+    // return true for pass and false for fail
 
-    public boolean calculateResultPrimary(Student student) {
-        HashMap<Integer, String> subjects = student.getSubjects();
+    public boolean hasPassed(Student student, Condition condition, HashMap<Integer, SubjectSignificance> subjectList) {
 
-        double English = Math.round((Integer.parseInt(subjects.get(01)) + Integer.parseInt(subjects.get(02))) / 2.0);
-        if (English < 40) {
-            System.out.println("Failed in English :" + English);
-            return false;// failing in english is fail
+        HashMap<Integer, Integer> major = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> minor = new HashMap<Integer, Integer>();
+        HashMap<Integer, Integer> evaluation = new HashMap<Integer, Integer>();
 
-        }
-        int failCount = 0; // failing in four or more is fail
+        int[] keysArray = getKeysArray(student.getSubjects());
+        int[] valuesArray = getValuesArray(student.getSubjects());
 
-        for (Map.Entry<Integer, String> entry : subjects.entrySet()) {
-            int key = entry.getKey();
-            String value = entry.getValue();
+        // putting subjects into hashmap wrt significance
 
-            // add third language keys in the database and in this if condition
-            if (key != 11 && Integer.parseInt(value) < 25) {
-                System.out.println("Less than 25% in " + key + " :" + value);
-                return false; // a student should score minimum 25% in all subjects
-            }
-            if (key != 11 && Integer.parseInt(value) < 40)
-                failCount++;
+        for (int i = 0; i < keysArray.length; i++) {
+            int key = keysArray[i];
 
-            if (failCount == 4) {
-                System.out.println("Failed in four subjects");
-                return false;
+            SubjectSignificance significance = subjectList.get(key);
+
+            switch (significance) {
+                case MAJOR: {
+                    major.put(key, valuesArray[i]);
+                    break;
+                }
+                case MINOR: {
+                    minor.put(key, valuesArray[i]);
+                    break;
+                }
+                case EVALUATION: {
+                    evaluation.put(key, valuesArray[i]);
+                    break;
+                }
             }
 
         }
 
-        return true;
+        // second and third language subjects
+
+        int[] tStringSl = (student.getSecondLanguage() != null) ? student.getSecondLanguage() : null;
+        int[] tStringTl = (student.getThirdLanguage() != null) ? student.getThirdLanguage() : null;
+
+        if (tStringSl != null) {
+
+            switch (subjectList.get(tStringSl[0])) {
+                case MAJOR: {
+                    major.put(tStringSl[0], tStringSl[1]);
+                    break;
+                }
+                case MINOR: {
+                    minor.put(tStringSl[0], tStringSl[1]);
+                    break;
+                }
+                case EVALUATION: {
+                    evaluation.put(tStringSl[0], tStringSl[1]);
+                    break;
+                }
+
+            }
+        }
+
+        if (tStringTl != null) {
+
+            switch (subjectList.get(tStringTl[0])) {
+                case MAJOR: {
+                    major.put(tStringTl[0], tStringTl[1]);
+                    break;
+                }
+                case MINOR: {
+                    minor.put(tStringTl[0], tStringTl[1]);
+                    break;
+                }
+                case EVALUATION: {
+                    evaluation.put(tStringTl[0], tStringTl[1]);
+                    break;
+                }
+
+            }
+
+        }
+
+        ConditionReader conditionReader = new ConditionReader(major, minor, evaluation);
+        conditionReader.addCompoundSubjects(condition);
+
+        // how many passing conditions the student has failed
+        int parameterFailureCount = 0;
+
+        for (int i = 0; i < condition.getCondition().size(); i++) {
+            ConditionBlock block = condition.getCondition().get(i);
+            Class<?> clazz = block.getClass();
+
+            switch (clazz.getSimpleName()) {
+                case "Compulsory": {
+                    if (((Compulsory) block).getUnaryOperator() == Operator.NULL)
+                        continue;
+                    if (conditionReader.compulsoryReader((Compulsory) block, subjectList))
+                        parameterFailureCount++;
+
+                    break;
+                }
+                case "MixedValue": {
+                    if (conditionReader.mixedValueReader((MixedValue) block))
+                        parameterFailureCount++;
+
+                    break;
+                }
+                
+                case "Value": {
+
+                    if (conditionReader.valueReader((Value) block))
+                        parameterFailureCount++;
+
+                    break;
+                }
+            }
+
+        }
+
+        if (parameterFailureCount > 0) {
+            return false;
+        } else {
+            return true;
+        }
 
     }
 
+    private static int[] getKeysArray(HashMap<Integer, Integer> hashMap) {
+        int[] keysArray = new int[hashMap.size()];
+        int index = 0;
+        for (int key : hashMap.keySet()) {
+            keysArray[index] = key;
+            index++;
+        }
+        return keysArray;
+    }
+
+    private static int[] getValuesArray(HashMap<Integer, Integer> hashMap) {
+        int[] valuesArray = new int[hashMap.size()];
+        int index = 0;
+        for (Integer value : hashMap.values()) {
+            valuesArray[index] = value;
+            index++;
+        }
+        return valuesArray;
+    }
 
 }
