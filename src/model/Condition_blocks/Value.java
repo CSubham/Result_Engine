@@ -1,11 +1,13 @@
 package model.Condition_blocks;
 
+import java.io.Serializable;
+
 import model.enums.Operator;
 import model.enums.SubjectSignificance;
 
 // value based condtion
 
-public class Value implements ConditionBlock {
+public class Value implements ConditionBlock, Serializable {
 
     // eg. major subs failed
     private SubjectSignificance significance;

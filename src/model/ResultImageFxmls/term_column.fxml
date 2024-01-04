@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="67.0" prefWidth="268.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="14.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="1ST TRM" textAlignment="CENTER" wrappingWidth="56.7861328125">
+         <font>
+            <Font name="Cantarell Regular" size="23.0" />
+         </font>
+      </Text>
+      <Text layoutX="113.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="2ND TRM" textAlignment="CENTER" wrappingWidth="56.7861328125">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Text>
+      <Text layoutX="211.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="3RD TRM" textAlignment="CENTER" wrappingWidth="56.7861328125">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Text>
+      <Line endX="1.5" endY="49.0" layoutX="87.0" layoutY="17.0" startX="1.5" startY="-21.0" />
+      <Line endX="1.5" endY="47.0" layoutX="187.0" layoutY="19.0" startX="1.5" startY="-21.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="TRANSPARENT" height="70.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" width="271.0" />
+   </children>
+</AnchorPane>

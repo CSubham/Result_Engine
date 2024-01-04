@@ -1,8 +1,9 @@
 package model.Condition_blocks;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Exception implements ConditionBlock{
+public class Exception implements ConditionBlock,Serializable{
 
     ArrayList<Integer> exception;
 

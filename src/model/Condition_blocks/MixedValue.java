@@ -1,6 +1,8 @@
 package model.Condition_blocks;
 
-public class MixedValue implements ConditionBlock {
+import java.io.Serializable;
+
+public class MixedValue implements ConditionBlock , Serializable{
     
 
     private Value firstValueCondition;

@@ -1,21 +1,28 @@
 package model;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
+import javafx.application.Application;
+import javafx.stage.Stage;
 import model.enums.SubjectSignificance;
 
-public class Master {
+public class Master extends Application {
     private static DataBridge databridge = new DataBridge();
-    // private static ResultSet subjects = null;
 
     static {
         databridge.connectDatabase();
-        // subjects = databridge.fetchQueryData("select * from subjects");
     }
 
     public static void main(String[] args) throws Exception {
@@ -89,19 +96,20 @@ public class Master {
         // System.out.println("Table Name: " + tableName);
         // }
 
-        HashMap<Integer, Integer> subjects = new HashMap<>();
-        subjects.put(01, 45);
-        subjects.put(02, 45);
-        subjects.put(04, 30);
-        subjects.put(05, 30);
-        subjects.put(06, 30);
-        subjects.put(07, 40);
-        subjects.put(9, 78);
-        subjects.put(10, 45);
-        subjects.put(11, 30);
-        subjects.put(8, 45);
+        // HashMap<Integer, Integer> subjects = new HashMap<>();
+        // subjects.put(01, 45);
+        // subjects.put(02, 45);
+        // subjects.put(04,100);
+        // subjects.put(05, 30);
+        // subjects.put(06, 46);
+        // subjects.put(07, 60);
+        // subjects.put(9, 78);
+        // subjects.put(10, 90);
+        // subjects.put(11, 30);
+        // subjects.put(8, 45);
 
-        // Student student = new Student(30, 8361, "Subham Rai", subjects, "11s");
+        // Student student = new Student(45, 0401, "Subham Rai The Third", subjects,
+        // "1a");
 
         // enterStudentData(student);
         // Result result = new Result(Master.subjects);
@@ -109,15 +117,62 @@ public class Master {
 
         // databridge.executeQuery("insert into subjects values('bengali',44);");
 
+        // HashMap<Integer, SubjectSignificance> gradeSubjectList = new HashMap<>();
+        // gradeSubjectList.put(01, SubjectSignificance.EVALUATION);
+        // gradeSubjectList.put(02, SubjectSignificance.EVALUATION);
+        // gradeSubjectList.put(03, SubjectSignificance.EVALUATION);
+        // gradeSubjectList.put(04, SubjectSignificance.EVALUATION);
+        // gradeSubjectList.put(05, SubjectSignificance.EVALUATION);
+        // gradeSubjectList.put(06, SubjectSignificance.EVALUATION);
+        // gradeSubjectList.put(07, SubjectSignificance.EVALUATION);
+        // gradeSubjectList.put(8, SubjectSignificance.EVALUATION);
+        // gradeSubjectList.put(9, SubjectSignificance.EVALUATION);
+        // gradeSubjectList.put(10, SubjectSignificance.EVALUATION);
+        // gradeSubjectList.put(11, SubjectSignificance.EVALUATION);
+        // gradeSubjectList.put(12, SubjectSignificance.EVALUATION);
+
+        // updateGradeSubjectList(1, gradeSubjectList);
+        // // String str = new Subject().generateSubjectList(gradeSubjectList);
+        // System.out.println(str);
+
+        // printHashMap(new Subject().subjectListToHashMap(str));
+        // String query = "CREATE TABLE your_table_name (grade INT, condition_object
+        // BYTEA ); ";
+
+        // Condition condition = new Condition();
+        // addNewCondition(condition,1);
+
+        // printDatabaseData();
+
+        // getGradeSubjectList(1);
+        // deleteCondition(1);
+
+        // int[] selectedTerms = { 1, 0, 0 };
+        // makeResult("1a", "pain stacking", selectedTerms, null);
+
+        // Student student = getStudentData(1);
+        // System.out.println(student.getTermOne());
+        // System.out.println(student.getTermTwo());
+        // System.out.println(student.getTermThree());
+
+        launch(args);
+
     }
 
-    // public static void printHashMap(Map<Integer, String> hashMap) {
-    // for (Map.Entry<Integer, String> entry : hashMap.entrySet()) {
-    // int key = entry.getKey();
-    // String value = entry.getValue();
-    // System.out.println("Key: " + key + ", Value: " + value);
-    // }
-    // }
+    @Override
+    public void start(Stage arg0) throws Exception {
+        int[] selectedTerms = { 1, 0, 0 };
+        makeResult("1a", "pain stacking", selectedTerms, null);
+        
+    }
+
+    public static void printHashMap(Map<Integer, SubjectSignificance> hashMap) {
+        for (Map.Entry<Integer, SubjectSignificance> entry : hashMap.entrySet()) {
+            int key = entry.getKey();
+            SubjectSignificance value = entry.getValue();
+            System.out.println("Key: " + key + ", Value: " + value);
+        }
+    }
 
     public static void printResultSet(ResultSet resultSet) {
         try {
@@ -149,7 +204,7 @@ public class Master {
         Connection connection = databridge.getConnection();
 
         // Step 2: Specify the tables you want to print
-        String[] tablesToPrint = { "students", "subjects", "term_data", "grade_subject_list" };
+        String[] tablesToPrint = { "students", "subjects", "term_data", "grade_subject_list", "conditions" };
 
         for (String tableName : tablesToPrint) {
             System.out.println("Table: " + tableName);
@@ -261,10 +316,19 @@ public class Master {
     public static void incrementStudentData(Student stu) throws SQLException {
 
         Student student = getStudentData(stu.getPin());
+        int[] secondLanguageFinal = null;
+        int[] thirdLanguageFinal = null;
 
         int[] valueFinal = addArrays(getValuesArray(stu.getSubjects()), getValuesArray(student.getSubjects()));
-        int[] secondLanguageFinal = addArrays(stu.getSecondLanguage(), student.getSecondLanguage());
-        int[] thirdLanguageFinal = addArrays(stu.getThirdLanguage(), student.getThirdLanguage());
+        try {
+            secondLanguageFinal = addArrays(stu.getSecondLanguage(), student.getSecondLanguage());
+        } catch (Exception e) {
+        }
+        try {
+            thirdLanguageFinal = addArrays(stu.getThirdLanguage(), student.getThirdLanguage());
+        } catch (Exception e) {
+
+        }
         int[] keysArray = getKeysArray(stu.getSubjects());
 
         HashMap<Integer, Integer> studentHM = new HashMap<Integer, Integer>();
@@ -276,10 +340,13 @@ public class Master {
         Student studentFinal = new Student(student.getRoll_no(), student.getPin(), student.getName(), studentHM,
                 stu.getGrade());
 
-        if (secondLanguageFinal != null)
-            studentFinal.setSecondLanguage(secondLanguageFinal);
-        if (thirdLanguageFinal != null)
-            studentFinal.setThirdLanguage(thirdLanguageFinal);
+        try {
+            if (secondLanguageFinal != null)
+                studentFinal.setSecondLanguage(secondLanguageFinal);
+            if (thirdLanguageFinal != null)
+                studentFinal.setThirdLanguage(thirdLanguageFinal);
+        } catch (Exception e) {
+        }
 
         updateStudentData(studentFinal);
 
@@ -327,19 +394,93 @@ public class Master {
     // changes here have not been tested due to no internet connection 11 December.
 
     public static Student getStudentData(int pin) throws SQLException {
-        String query = "SELECT * FROM Student WHERE pin =" + pin + ";";
+        String query = "SELECT * FROM students WHERE pin =" + pin + ";";
 
-        ResultSet studentData = databridge.fetchQueryData(query);
+        String tString = "";
+        String grade = "";
+
+        ResultSet resultSet = databridge.fetchQueryData(query);
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+
+        while (resultSet.next()) {
+            for (int i = 1; i <= columnCount; i++) {
+                switch (i) {
+                    case 1 -> {
+                        break;
+                    }
+                    case 2 -> {
+                        grade = resultSet.getString(i);
+                        break;
+                    }
+                    case 3 -> {
+                        tString = resultSet.getString(i);
+                        break;
+                    }
+
+                }
+            }
+            System.out.println();
+        }
+
         TranscriptString tStringObj = new TranscriptString();
-
-        String tString = studentData.getString(0);
-        String grade = studentData.getString(1);
 
         int rollNo = tStringObj.getRollNo(tString);
         String name = tStringObj.getName(tString);
         HashMap<Integer, Integer> subjects = tStringObj.convertToHashMap(tString);
 
         Student student = new Student(rollNo, pin, name, subjects, grade);
+        try {
+            student.setSecondLanguage(tStringObj.getSecondLanguage(tString));
+        } catch (Exception e) {
+        }
+        try {
+            student.setSecondLanguage(tStringObj.getThirdLanguage(tString));
+
+        } catch (Exception e) {
+        }
+
+        // get term one to three
+        String queryTwo = "SELECT * FROM term_data WHERE pin =" + pin + ";";
+        ResultSet termData = databridge.fetchQueryData(queryTwo);
+        ResultSetMetaData metaDataTwo = termData.getMetaData();
+        int columnCountTwo = metaDataTwo.getColumnCount();
+
+        String termOne = null;
+        String termTwo = null;
+        String termThree = null;
+
+        while (termData.next()) {
+            for (int i = 1; i <= columnCountTwo; i++) {
+                switch (i) {
+                    case 1 -> {
+                        break;
+                    }
+                    case 2 -> {
+                        termOne = termData.getString(i);
+                        break;
+                    }
+                    case 3 -> {
+                        termTwo = termData.getString(i);
+                        break;
+                    }
+                    case 4 -> {
+                        termThree = termData.getString(i);
+                        break;
+                    }
+
+                }
+            }
+            System.out.println();
+        }
+
+        if (termOne != null)
+            student.setTermOne(termOne);
+        if (termTwo != null)
+            student.setTermTwo(termTwo);
+        if (termThree != null)
+            student.setTermThree(termThree);
+
         return student;
 
     }
@@ -407,7 +548,7 @@ public class Master {
                     }
 
                 }
-                System.out.println(" grade from insertTermData() :" + grade);
+
                 // fetch data acc to grade
                 ResultSet rs = databridge
                         .fetchQueryData("select pin,data from students where class='" + grade + "';");
@@ -450,7 +591,8 @@ public class Master {
         String subjectString = subject.generateSubjectList(subjects);
 
         databridge.executeQuery(
-                "INSERT INTO grade_subject_list (grade, subject_list) VALUES ( grade,'" + subjectString + "');");
+                "INSERT INTO grade_subject_list (grade, subject_list) VALUES ( " + grade + ",'" + subjectString
+                        + "');");
 
     }
 
@@ -462,12 +604,263 @@ public class Master {
 
     }
 
+    public static HashMap<Integer, SubjectSignificance> getGradeSubjectList(int n) throws SQLException {
+        String query = "SELECT * FROM grade_subject_list WHERE grade =" + n + ";";
+
+        String gradeSubjectList = "";
+
+        ResultSet resultSet = databridge.fetchQueryData(query);
+        ResultSetMetaData metaData = resultSet.getMetaData();
+        int columnCount = metaData.getColumnCount();
+
+        while (resultSet.next()) {
+            for (int i = 1; i <= columnCount; i++) {
+                switch (i) {
+                    case 1 -> {
+                        break;
+                    }
+                    case 2 -> {
+                        gradeSubjectList = resultSet.getString(i);
+
+                        break;
+                    }
+
+                }
+            }
+            System.out.println();
+        }
+
+        Subject subject = new Subject();
+        return subject.subjectListToHashMap(gradeSubjectList);
+
+    }
+
+    public static void deleteGradeSubjectList(int grade) {
+
+        String query = " DELETE FROM grade_subject_list WHERE grade = " + grade + ";";
+        databridge.executeQuery(query);
+
+    }
+
+    public static void deleteSubject(int subject_code) {
+        String query = " DELETE FROM subjects WHERE subject_code = " + subject_code + ";";
+        databridge.executeQuery(query);
+    }
+
+    public static void addNewSubject(int subjectCode, String subjectName) {
+
+        String query = "INSERT INTO subjects (subject_code, subject_name) VALUES (" + subjectCode + ",'" + subjectName
+                + "')";
+        databridge.executeQuery(query);
+
+    }
+
+    public static void deleteCondition(int grade) {
+        String query = " DELETE FROM conditions WHERE grade = " + grade + ";";
+        databridge.executeQuery(query);
+    }
+
+    public static void addNewCondition(Condition condition, int grade) {
+        byte[] serialized = serialize(condition);
+        String hexString = bytesToHex(serialized);
+        String query = "INSERT INTO conditions (grade, data_bytea) VALUES (" + grade + ", E'\\\\x" + hexString + "');";
+        databridge.executeQuery(query);
+
+    }
+
+    public static Condition getConditionBlock(int grade) throws SQLException {
+
+        byte[] bytes = retrieveByteArray(databridge.getConnection(), 1);
+
+        Condition condition = deserialize(bytes);
+        return condition;
+
+    }
+
+    private static byte[] retrieveByteArray(Connection connection, int grade) throws SQLException {
+        String sql = "SELECT data_bytea FROM conditions WHERE grade = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, grade);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getBytes("data_bytea");
+                } else {
+                    return null; // No data found
+                }
+            }
+        }
+    }
+
+    private static String bytesToHex(byte[] bytes) {
+        StringBuilder hexString = new StringBuilder();
+        for (byte aByte : bytes) {
+            String hex = Integer.toHexString(0xff & aByte);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
+
+    private static byte[] serialize(Condition condition) {
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(condition);
+            System.out.println("Object has been serialized");
+            return bos.toByteArray();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private static Condition deserialize(byte[] data) {
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(data);
+                ObjectInputStream ois = new ObjectInputStream(bis)) {
+            Object obj = ois.readObject();
+            System.out.println("Object has been deserialized");
+            return (Condition) obj;
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // custom query
+    // note : you need a way to authorise else misconducts are inevitable
+
+    public static void customQuery(String query) {
+        databridge.executeQuery(query);
+    }
+
+    public static void fetchQueryData(String query) {
+        ResultSet resultSet = databridge.fetchQueryData(query);
+        printResultSet(resultSet);
+    }
+
     // make result code
 
-    public static void makeResult() {
-        // Result result = new Result(subjects);
+    // selected terms = (position+1) represents terms if value at that pos > 0 it is
+    // selected
+    public static void makeResult(String grade, String title, int[] selectedTerms, float[] averagerValues)
+            throws SQLException {
 
-        // code
+        ArrayList<Integer> pins = retrievePinsByGrade(grade);
+        // a tweak here so below class 10 the number of grades and conditions saved are
+        // minimal, basically same grades
+        // will have same grade subjectlist till 10 so below 11 we can store only for
+        // grade section a
+
+        HashMap<Integer, SubjectSignificance> gradeSubjectList = getGradeSubjectList(
+                Subject.gradeStringToInteger(grade));
+
+        HashMap<Integer, String> subjects = retrieveSubjects();
+        Condition condition = getConditionBlock(Subject.gradeStringToInteger(grade));
+
+        for (int i : pins) {
+
+            ArrayList<String> termData = new ArrayList<>();
+
+            Student student = getStudentData(i);
+
+            for (int j = 0; j < selectedTerms.length; j++) {
+                if (selectedTerms[j] > 0) {
+                    termData.add(
+
+                            switch (j) {
+                                case 0 -> student.getTermOne();
+                                case 1 -> student.getTermTwo();
+                                case 2 -> student.getTermThree();
+                                default -> throw new IllegalArgumentException("Unexpected value: " + j);
+                            }
+
+                    );
+
+                } else {
+                    switch (j) {
+                        case 0 -> student.setTermOne(null);
+                        case 1 -> student.setTermTwo(null);
+                        case 2 -> student.setTermThree(null);
+                    }
+                }
+
+            }
+
+            AdvancedTermAverager advancedTermAverager = new AdvancedTermAverager();
+            // subject list is grade subject list
+            if (termData.size() == 2) {
+                student.setSubjects(new TranscriptString().convertToHashMap(advancedTermAverager.averageofTwo(
+                        gradeSubjectList, termData.get(0), termData.get(1), averagerValues[0],
+                        averagerValues[1], averagerValues[2], averagerValues[3])));
+
+            } else if (termData.size() == 3) {
+
+                student.setSubjects(new TranscriptString().convertToHashMap(advancedTermAverager.averageofThree(
+                        gradeSubjectList, termData.get(0), termData.get(1), termData.get(2), averagerValues[0],
+                        averagerValues[1], averagerValues[2], averagerValues[3], averagerValues[4])));
+
+            } else {
+                student.setSubjects(new TranscriptString().convertToHashMap(termData.get(0)));
+            }
+
+            // store file and store in created folder
+            Result.createResultImageFile(student, title, condition, gradeSubjectList, subjects);
+
+        }
+
     }
+
+    public static void makeResult(int pin) {
+
+    }
+
+    private static HashMap<Integer, String> retrieveSubjects() throws SQLException {
+        String sql = "SELECT subject_code, subject_name FROM subjects";
+        Connection connection = databridge.getConnection();
+        HashMap<Integer, String> subjectMap = new HashMap<>();
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    int subjectCode = resultSet.getInt("subject_code");
+                    String subjectName = resultSet.getString("subject_name");
+
+                    // Store in the HashMap
+                    subjectMap.put(subjectCode, subjectName);
+                }
+            }
+        }
+
+        return subjectMap;
+    }
+
+    private static ArrayList<Integer> retrievePinsByGrade(String grade) throws SQLException {
+
+        Connection connection = databridge.getConnection();
+        ArrayList<Integer> pins = new ArrayList<>();
+
+        String sql = "SELECT pin FROM students WHERE class = ?";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setString(1, grade);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    // Access the 'pin' column
+                    int pin = resultSet.getInt("pin");
+                    pins.add(pin);
+
+                }
+            }
+        }
+
+        return pins;
+
+    }
+
+    
 
 }

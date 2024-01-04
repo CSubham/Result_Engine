@@ -2,7 +2,6 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import model.Condition_blocks.Compulsory;
 import model.Condition_blocks.ConditionBlock;
 import model.Condition_blocks.Exception;
@@ -17,6 +16,7 @@ public class ConditionReader {
     private HashMap<Integer, Integer> minor;
     private HashMap<Integer, Integer> evaluation;
     private ArrayList<ArrayList<Integer>> compoundSubjects;
+    
 
     public ConditionReader(HashMap<Integer, Integer> major, HashMap<Integer, Integer> minor,
             HashMap<Integer, Integer> evaluation) {
@@ -56,7 +56,7 @@ public class ConditionReader {
             ArrayList<Integer> marks = new ArrayList<Integer>();
 
             for (int i = 0; i < subjects.size(); i++) {
-                marks.add(getMarks(compulosry.getSubjectCode(), subjectList));
+                marks.add(getMarks(subjects.get(i), subjectList));
             }
 
             value = (int) (Math.round(calculateAverage(marks)));
@@ -115,11 +115,9 @@ public class ConditionReader {
 
     }
 
-    public boolean mixedValueReader(MixedValue mixedValue){
-        return valueReader(mixedValue.getFirstValueCondition() ) && valueReader(mixedValue.getSecondValueCondition());
+    public boolean mixedValueReader(MixedValue mixedValue) {
+        return valueReader(mixedValue.getFirstValueCondition()) && valueReader(mixedValue.getSecondValueCondition());
     }
-
-    
 
     private boolean vOperatorV2(int marks, Operator operator, int value) {
         if (operator == Operator.LESS_THAN) {
@@ -135,9 +133,11 @@ public class ConditionReader {
 
     private boolean isCompoundSubject(int subjectCode) {
 
-        for (ArrayList<Integer> compoundSubject : compoundSubjects) {
-            if (compoundSubject.contains(subjectCode))
-                return true;
+        if (compoundSubjects != null) {
+            for (ArrayList<Integer> compoundSubject : compoundSubjects) {
+                if (compoundSubject.contains(subjectCode))
+                    return true;
+            }
         }
         return false;
     }

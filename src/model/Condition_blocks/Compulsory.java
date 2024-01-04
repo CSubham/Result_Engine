@@ -1,10 +1,11 @@
 package model.Condition_blocks;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import model.enums.Operator;
 
-public class Compulsory implements ConditionBlock {
+public class Compulsory implements ConditionBlock,Serializable {
 
     // a compulsory should only have a single subject but, if it has more than one,
     // it implies that the condition is being applied on the average of these
@@ -34,7 +35,7 @@ public class Compulsory implements ConditionBlock {
 
     // subject code is not null because subjects to be checked first;
     public Compulsory(ArrayList<Integer> subjects, Operator unaryOperator, int value) {
-        this.subjects = subjects;
+        this.subjects = subjects; 
 
         this.unaryOperator = unaryOperator;
         this.value = value;

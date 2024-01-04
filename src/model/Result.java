@@ -3,6 +3,10 @@ package model;
 import java.sql.ResultSet;
 import java.util.HashMap;
 
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import model.Condition_blocks.Compulsory;
 import model.Condition_blocks.ConditionBlock;
 import model.Condition_blocks.MixedValue;
@@ -13,22 +17,18 @@ import model.enums.SubjectSignificance;
 public class Result {
     // ensure that the class is made to handle only the data of one student at a
     // time
+    private static HashMap<Integer, Integer> major = new HashMap<Integer, Integer>();
+    private static HashMap<Integer, Integer> minor = new HashMap<Integer, Integer>();
+    private static HashMap<Integer, Integer> evaluation = new HashMap<Integer, Integer>();
 
-    private ResultSet subjectKeys;
     // result set containing subject name and subject keys
-
-    public Result(ResultSet subjectKeys) {
-        this.subjectKeys = subjectKeys;
-    }
 
     // a function which has a student object and a condition object
     // return true for pass and false for fail
 
-    public boolean hasPassed(Student student, Condition condition, HashMap<Integer, SubjectSignificance> subjectList) {
-
-        HashMap<Integer, Integer> major = new HashMap<Integer, Integer>();
-        HashMap<Integer, Integer> minor = new HashMap<Integer, Integer>();
-        HashMap<Integer, Integer> evaluation = new HashMap<Integer, Integer>();
+    // takes the averaged hashmap
+    public static boolean hasPassed(Student student, Condition condition,
+            HashMap<Integer, SubjectSignificance> subjectList) {
 
         int[] keysArray = getKeysArray(student.getSubjects());
         int[] valuesArray = getValuesArray(student.getSubjects());
@@ -126,7 +126,7 @@ public class Result {
 
                     break;
                 }
-                
+
                 case "Value": {
 
                     if (conditionReader.valueReader((Value) block))
@@ -144,6 +144,71 @@ public class Result {
             return true;
         }
 
+    }
+
+    public static void createResultImageFile(Student student,  String title, Condition condition,
+            HashMap<Integer, SubjectSignificance> subjectList, HashMap<Integer,String> subjects) {
+
+                boolean hasPassed = hasPassed(student, condition, subjectList);
+
+                // generates image of the result
+                ResultImageBuilder rib = new ResultImageBuilder();
+
+                TranscriptString tString = new TranscriptString();
+                // to store marks of terms, in case a term is null, blank cells are prinetd
+                HashMap<Integer,Integer> termOne= null;
+                HashMap<Integer,Integer> termTwo= null;
+                HashMap<Integer,Integer> termThree= null;
+
+             
+                try{
+                    termOne = getEvaluationSubjects(tString.convertToHashMap(student.getTermOne()), subjectList);
+                    
+
+                }catch(Exception e){}
+                try{
+                    termOne = getEvaluationSubjects(tString.convertToHashMap(student.getTermTwo()), subjectList);
+
+                }catch(Exception e){}
+                try{
+                    termOne = getEvaluationSubjects(tString.convertToHashMap(student.getTermThree()), subjectList);
+
+                }catch(Exception e){}
+
+                VBox PETable = rib.createPETable(termOne,termTwo ,termThree ,subjects );
+                Scene scene = new Scene(PETable);
+
+                ResultImageBuilder.captureAndSaveVBoxImage((VBox)scene.getRoot(),student.getName()+".png");
+                
+    }
+
+    private static HashMap<Integer, Integer> getEvaluationSubjects(HashMap<Integer, Integer> subjects,
+            HashMap<Integer, SubjectSignificance> subjectList) {
+
+        int[] keysArray = getKeysArray(subjects);
+        int[] valuesArray = getValuesArray(subjects);
+
+        HashMap<Integer, Integer> evaluationSubjects = new HashMap<>();
+
+        for (int i = 0; i < keysArray.length; i++) {
+            int key = keysArray[i];
+
+            SubjectSignificance significance = subjectList.get(key);
+
+            switch (significance) {
+
+                case EVALUATION: {
+                    evaluationSubjects.put(key, valuesArray[i]);
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+
+        }
+
+        return evaluationSubjects;
     }
 
     private static int[] getKeysArray(HashMap<Integer, Integer> hashMap) {

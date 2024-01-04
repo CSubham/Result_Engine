@@ -1,6 +1,6 @@
 package model.Condition_blocks;
 
-public interface ConditionBlock {
+public interface ConditionBlock  {
     
     
 }

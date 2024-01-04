@@ -13,6 +13,7 @@ public class AdvancedTermAverager {
     // note : add funcitonality for a student being able to drop or pick a subject
     // during the terms
 
+    // subject list here is grade subject list
     public String averageofTwo(HashMap<Integer, SubjectSignificance> subjectList, String tString, String tString2,
             Float k, Float l, Float m, Float n) {
         TranscriptString transcriptObj = new TranscriptString();

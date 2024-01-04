@@ -3,6 +3,7 @@ package controller;
 import java.sql.SQLException;
 import java.util.HashMap;
 
+import model.Condition;
 import model.Master;
 import model.Student;
 import model.enums.SubjectSignificance;
@@ -10,7 +11,15 @@ import model.enums.SubjectSignificance;
 public class Control {
 
     public static void main(String[] args) throws SQLException {
+
         printDatabaseData();
+
+    }
+
+    // make the results of provided grade (Class,section)
+    public static void makeResult(String grade, String title, int[] selectedTerms, float[] averagerValues)
+            throws SQLException {
+        Master.makeResult(grade, title, selectedTerms, averagerValues);
     }
 
     // Adding a new student to the database
@@ -40,8 +49,17 @@ public class Control {
         Master.incrementStudentData(student);
     }
 
+    @Deprecated
+    // fetch student data
+    // lacks functionality of storing the term data of a student
     public static Student getStudentData(int pin) throws SQLException {
         return Master.getStudentData(pin);
+
+    }
+
+    // delete a student
+    public static void deleteStudentData(int pin) {
+        Master.deleteStudentData(pin);
     }
 
     // insert data present in Table: students, Column:data into term_one, term_two,
@@ -63,16 +81,59 @@ public class Control {
     // The grade below is obtained by 3n-2 where n is grade, this gives the value of
     // scetion a, incremented by +1 for
     // section b, +2 for section c
-    public static void newGradeSubjectList(int grade, HashMap<Integer, SubjectSignificance> gradeSubjectList) {
-        Master.enterGradeSubjectList(0, null);
+    public static void addNewGradeSubjectList(int grade, HashMap<Integer, SubjectSignificance> gradeSubjectList) {
+        Master.enterGradeSubjectList(grade, gradeSubjectList);
     }
 
     public static void updateGradeSubjectList(int grade, HashMap<Integer, SubjectSignificance> gradeSubjectList) {
         Master.updateGradeSubjectList(grade, gradeSubjectList);
     }
 
-    // delete a student
-    public static void deleteStudentData(int pin){
-        Master.deleteStudentData(pin);
+    // delete gradesubjectlist
+    public static void deleteGradeSubjectList(int grade) {
+        Master.deleteGradeSubjectList(grade);
     }
+
+    public static HashMap<Integer, SubjectSignificance> getGradeSubjectList(int n) throws SQLException {
+        return Master.getGradeSubjectList(n);
+    }
+
+    // delete subject
+    public static void deleteSubject(int subjectCode) {
+        Master.deleteSubject(subjectCode);
+    }
+
+    // add new subject
+    public static void addNewSubject(int subjectCode, String subjectName) {
+        Master.addNewSubject(subjectCode, subjectName);
+
+    }
+
+    // custom query with no output
+    public static void customQuery(String query) {
+        Master.customQuery(query);
+    }
+
+    // query with output, prints in terminal
+    public static void fetchQueryData(String query) {
+        Master.fetchQueryData(query);
+    }
+
+    public static Student getStudentObject(int rollNo, int pin, String name, HashMap<Integer, Integer> subjects,
+            String grade) {
+        return new Student(rollNo, pin, name, subjects, grade);
+    }
+
+    public static void addNewCondition(Condition condition, int grade) {
+        Master.addNewCondition(condition, grade);
+    }
+
+    public static Condition getConditionBlock(int grade) throws SQLException {
+        return Master.getConditionBlock(grade);
+    }
+
+    public static void deleteCondition(int grade) {
+        Master.deleteCondition(grade);
+    }
+
 }

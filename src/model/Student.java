@@ -10,11 +10,13 @@ public class Student {
     private HashMap<Integer, Integer> subjects;
     private int[] secondLanguage;
     private int[] thirdLanguage;
-
+    private String termOne;
+    private String termTwo;
+    private String termThree;
     // class basically, as we cannot use it being reserved
     private String grade;
 
-    public  Student(int roll_no, int pin, String name, HashMap<Integer, Integer> subjects, String grade) {
+    public Student(int roll_no, int pin, String name, HashMap<Integer, Integer> subjects, String grade) {
         this.roll_no = roll_no;
         this.pin = pin;
         this.name = name;
@@ -25,7 +27,7 @@ public class Student {
     }
 
     public Student(int roll_no, int pin, String name, HashMap<Integer, Integer> subjects, String grade,
-            int[] secondLanguage, int [] thirdLanguage) {
+            int[] secondLanguage, int[] thirdLanguage) {
 
         this.roll_no = roll_no;
         this.pin = pin;
@@ -34,6 +36,30 @@ public class Student {
         this.grade = grade;
         this.secondLanguage = secondLanguage;
         this.thirdLanguage = thirdLanguage;
+    }
+
+    public String getTermOne() {
+        return termOne;
+    }
+
+    public void setTermOne(String termOne) {
+        this.termOne = termOne;
+    }
+
+    public String getTermTwo() {
+        return termTwo;
+    }
+
+    public void setTermTwo(String termTwo) {
+        this.termTwo = termTwo;
+    }
+
+    public String getTermThree() {
+        return termThree;
+    }
+
+    public void setTermThree(String termThree) {
+        this.termThree = termThree;
     }
 
     public int getRoll_no() {
@@ -92,5 +118,4 @@ public class Student {
         this.thirdLanguage = thirdLanguage;
     }
 
-   
 }

@@ -1,13 +1,14 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import model.Condition_blocks.ConditionBlock;
 
-public class Condition {
+public class Condition implements Serializable {
     // a collection of condition blocks
 
-    private ArrayList<ConditionBlock> condition;
+    private ArrayList<ConditionBlock> condition = new ArrayList<>();
 
     public Condition() {
     }
@@ -20,5 +21,6 @@ public class Condition {
         return condition;
     }
 
+   
     
 }
