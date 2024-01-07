@@ -22,8 +22,8 @@ public class TranscriptString {
 
         transcriptString += "s:";
         for (int i = 0; i < keysArray.length; i++) {
-            int key =keysArray[i];
-            String value = (valuesArray[i]== -1)?"#": ""+valuesArray[i];
+            int key = keysArray[i];
+            String value = (valuesArray[i] == -1) ? "#" : "" + valuesArray[i];
             transcriptString += key + "-" + value;
             if (i != keysArray.length - 1)
                 transcriptString += ",";
@@ -75,7 +75,8 @@ public class TranscriptString {
     // convert transcript into hashmap
 
     public HashMap<Integer, Integer> convertToHashMap(String str) {
-        HashMap<Integer, Integer> studentHM = new HashMap<Integer,Integer>();
+        if  (str == null)return null;
+        HashMap<Integer, Integer> studentHM = new HashMap<Integer, Integer>();
 
         String[] primaryStrings = str.split(";");
 
@@ -85,10 +86,12 @@ public class TranscriptString {
 
             String[] flag = marks[i].split("-");
             int subjectCode = Integer.parseInt(flag[0]);
-            int subjectMarks = (flag[1]== "#")?-1: Integer.parseInt(flag[1]);
-            studentHM.put(subjectCode,subjectMarks);
+            int subjectMarks = (flag[1] == "#") ? -1 : Integer.parseInt(flag[1]);
+            studentHM.put(subjectCode, subjectMarks);
 
         }
+
+        
 
         return studentHM;
 
@@ -110,31 +113,31 @@ public class TranscriptString {
         return Integer.parseInt(roll_no);
 
     }
-    // these functions return an array where first subject code and then marks is contained in them
+    // these functions return an array where first subject code and then marks is
+    // contained in them
 
     public int[] getSecondLanguage(String str) {
         String[] primaryStrings = str.split(";");
-        int [] subjectNMark = new int [2];
+        int[] subjectNMark = new int[2];
 
         try {
 
-            if(primaryStrings[3].substring(0,2)== "sl"){
+            if (primaryStrings[3].substring(0, 2) == "sl") {
 
-                String [] utilty = (primaryStrings[3].substring(3)).split("-");
-                subjectNMark[0] = Integer.parseInt( utilty[0]);
-                subjectNMark[1] = Integer.parseInt( utilty[1]);
-            }else if(primaryStrings[4].substring(0,2)== "sl"){
-                String [] utilty = (primaryStrings[4].substring(3)).split("-");
-                subjectNMark[0] = Integer.parseInt( utilty[0]);
-                subjectNMark[1] = Integer.parseInt( utilty[1]);
+                String[] utilty = (primaryStrings[3].substring(3)).split("-");
+                subjectNMark[0] = Integer.parseInt(utilty[0]);
+                subjectNMark[1] = Integer.parseInt(utilty[1]);
+            } else if (primaryStrings[4].substring(0, 2) == "sl") {
+                String[] utilty = (primaryStrings[4].substring(3)).split("-");
+                subjectNMark[0] = Integer.parseInt(utilty[0]);
+                subjectNMark[1] = Integer.parseInt(utilty[1]);
 
-            }else{ 
+            } else {
                 throw new Exception("No second language found");
             }
 
-            
         } catch (Exception e) {
-            
+
             System.out.println(e);
             System.out.println(e);
             subjectNMark = null;
@@ -145,27 +148,26 @@ public class TranscriptString {
 
     }
 
-    public int[] getThirdLanguage(String str){
+    public int[] getThirdLanguage(String str) {
         String[] primaryStrings = str.split(";");
-        int [] subjectNMark = new int [2];
+        int[] subjectNMark = new int[2];
 
         try {
 
-            if(primaryStrings[3].substring(0,2)== "tl"){
+            if (primaryStrings[3].substring(0, 2) == "tl") {
 
-                String [] utilty = (primaryStrings[3].substring(3)).split("-");
-                subjectNMark[0] = Integer.parseInt( utilty[0]);
-                subjectNMark[1] = Integer.parseInt( utilty[1]);
-            }else if(primaryStrings[4].substring(0,2)== "tl"){
-                String [] utilty = (primaryStrings[4].substring(3)).split("-");
-                subjectNMark[0] = Integer.parseInt( utilty[0]);
-                subjectNMark[1] = Integer.parseInt( utilty[1]);
+                String[] utilty = (primaryStrings[3].substring(3)).split("-");
+                subjectNMark[0] = Integer.parseInt(utilty[0]);
+                subjectNMark[1] = Integer.parseInt(utilty[1]);
+            } else if (primaryStrings[4].substring(0, 2) == "tl") {
+                String[] utilty = (primaryStrings[4].substring(3)).split("-");
+                subjectNMark[0] = Integer.parseInt(utilty[0]);
+                subjectNMark[1] = Integer.parseInt(utilty[1]);
 
-            }else{ 
+            } else {
                 throw new Exception("No third language found");
             }
 
-            
         } catch (Exception e) {
             // TODO: handle exception
             System.out.println(e);
@@ -174,7 +176,6 @@ public class TranscriptString {
         }
 
         return subjectNMark;
-
 
     }
 

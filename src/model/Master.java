@@ -163,7 +163,7 @@ public class Master extends Application {
     public void start(Stage arg0) throws Exception {
         int[] selectedTerms = { 1, 0, 0 };
         makeResult("1a", "pain stacking", selectedTerms, null);
-        
+
     }
 
     public static void printHashMap(Map<Integer, SubjectSignificance> hashMap) {
@@ -860,7 +860,5 @@ public class Master extends Application {
         return pins;
 
     }
-
-    
 
 }

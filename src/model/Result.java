@@ -1,12 +1,10 @@
 package model;
 
-import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
-
-import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import model.Condition_blocks.Compulsory;
 import model.Condition_blocks.ConditionBlock;
 import model.Condition_blocks.MixedValue;
@@ -21,6 +19,11 @@ public class Result {
     private static HashMap<Integer, Integer> minor = new HashMap<Integer, Integer>();
     private static HashMap<Integer, Integer> evaluation = new HashMap<Integer, Integer>();
 
+    private static HashMap<Integer, Integer> termOne = null;
+    private static HashMap<Integer, Integer> termTwo = null;
+    private static HashMap<Integer, Integer> termThree = null;
+    private static ArrayList<ArrayList<Integer>> averageSubjectSignifier = new ArrayList<>();
+
     // result set containing subject name and subject keys
 
     // a function which has a student object and a condition object
@@ -30,8 +33,23 @@ public class Result {
     public static boolean hasPassed(Student student, Condition condition,
             HashMap<Integer, SubjectSignificance> subjectList) {
 
-        int[] keysArray = getKeysArray(student.getSubjects());
-        int[] valuesArray = getValuesArray(student.getSubjects());
+        // if the average subjects value stored in student is null probably term one,two
+        // or three has the value
+
+        HashMap<Integer, Integer> inUseHashMap = null;
+
+        if (student.getSubjects() != null) {
+            inUseHashMap = student.getSubjects();
+        } else if (student.getTermOne() != null) {
+            inUseHashMap = new TranscriptString().convertToHashMap(student.getTermOne());
+        } else if (student.getTermTwo() != null) {
+            inUseHashMap = new TranscriptString().convertToHashMap(student.getTermTwo());
+
+        } else if (student.getTermThree() != null) {
+            inUseHashMap = new TranscriptString().convertToHashMap(student.getTermThree());
+        }
+        int[] keysArray = getKeysArray(inUseHashMap);
+        int[] valuesArray = getValuesArray(inUseHashMap);
 
         // putting subjects into hashmap wrt significance
 
@@ -146,45 +164,159 @@ public class Result {
 
     }
 
-    public static void createResultImageFile(Student student,  String title, Condition condition,
-            HashMap<Integer, SubjectSignificance> subjectList, HashMap<Integer,String> subjects) {
+    public static void createResultImageFile(Student student, String title, Condition condition,
+            HashMap<Integer, SubjectSignificance> subjectList, HashMap<Integer, String> subjects) {
 
-                boolean hasPassed = hasPassed(student, condition, subjectList);
+        // this function is called first as it sets the value of the MAJOR,MINOR,
+        // EVALUATION
+        boolean hasPassed = hasPassed(student, condition, subjectList);
 
-                // generates image of the result
-                ResultImageBuilder rib = new ResultImageBuilder();
+        // generates image of the result
+        ResultImageBuilder rib = new ResultImageBuilder();
 
-                TranscriptString tString = new TranscriptString();
-                // to store marks of terms, in case a term is null, blank cells are prinetd
-                HashMap<Integer,Integer> termOne= null;
-                HashMap<Integer,Integer> termTwo= null;
-                HashMap<Integer,Integer> termThree= null;
+        TranscriptString tString = new TranscriptString();
 
-             
-                try{
-                    termOne = getEvaluationSubjects(tString.convertToHashMap(student.getTermOne()), subjectList);
-                    
+        // to store marks of terms, in case a term is null, blank cells are printed
+        // evaluation subjects stored in term one,two,three
 
-                }catch(Exception e){}
-                try{
-                    termOne = getEvaluationSubjects(tString.convertToHashMap(student.getTermTwo()), subjectList);
+        try {
+            termOne = getEvaluationSubjects(tString.convertToHashMap(student.getTermOne()), subjectList);
 
-                }catch(Exception e){}
-                try{
-                    termOne = getEvaluationSubjects(tString.convertToHashMap(student.getTermThree()), subjectList);
+        } catch (Exception e) {
+        }
+        try {
+            termTwo = getEvaluationSubjects(tString.convertToHashMap(student.getTermTwo()), subjectList);
 
-                }catch(Exception e){}
+        } catch (Exception e) {
+        }
+        try {
+            termThree = getEvaluationSubjects(tString.convertToHashMap(student.getTermThree()), subjectList);
 
-                VBox PETable = rib.createPETable(termOne,termTwo ,termThree ,subjects );
-                Scene scene = new Scene(PETable);
+        } catch (Exception e) {
+        }
 
-                ResultImageBuilder.captureAndSaveVBoxImage((VBox)scene.getRoot(),student.getName()+".png");
-                
+        // set only once for a single grade
+        rib.setSubjects(subjects);
+        addCompoundSubjects(condition);
+        rib.setAverageSubjectsSignifier(averageSubjectSignifier);
+        // setting average subjects, which is stored in student subjects variable but if
+        // it is null
+        // it probably means the result being generated for a single term
+        rib.setAveragedSubjectsValue(student.getSubjects());
+        // set MAJOR AND MINOR subject codes
+        rib.setMajorSubCodes(convertKeysToArrayList(major));
+        rib.setMinorSubCodes(convertKeysToArrayList(minor));
+
+        // set term values for petable
+        rib.setTermOne(getEvaluationSubjects(termOne, subjectList));
+        rib.setTermTwo(getEvaluationSubjects(termTwo, subjectList));
+        rib.setTermThree(getEvaluationSubjects(termThree, subjectList));
+
+        VBox PETable = rib.createPETable();
+
+        // set term values for stable
+        // set values in term one.two,three for subjects
+        // also add second language and third
+        termOne = tString.convertToHashMap(student.getTermOne());
+        setLanguagesTermOne(student.getTermOne());
+        termTwo = tString.convertToHashMap(student.getTermTwo());
+        setLanguagesTermTwo(student.getTermTwo());
+        termThree = tString.convertToHashMap(student.getTermThree());
+        setLanguagesTermThree(student.getTermThree());
+
+        rib.setTermOne(termOne);
+        rib.setTermTwo(termTwo);
+        rib.setTermThree(termThree);
+
+        VBox STable = rib.createSubjectTable();
+
+        // the below code is actually meant to done in ResultImageBuilder
+
+        HBox joiner = new HBox();
+        VBox result = new VBox();
+
+        joiner.getChildren().addAll(PETable, STable);
+        result.getChildren().add(joiner);
+        Scene scene = new Scene(result);
+
+        ResultImageBuilder.captureAndSaveVBoxImage((VBox) scene.getRoot(), student.getName() + ".png");
+
+    }
+
+    private static void setLanguagesTermOne(String str) {
+
+        if (str == null)
+            return;
+        int[] sl = new TranscriptString().getSecondLanguage(str);
+        int[] tl = new TranscriptString().getThirdLanguage(str);
+        if (sl != null) {
+            termOne.put(sl[0], sl[1]);
+        }
+
+        if (tl != null) {
+            termOne.put(tl[0], tl[1]);
+        }
+    }
+
+    private static void setLanguagesTermTwo(String str) {
+        if (str == null)
+            return;
+
+        int[] sl = new TranscriptString().getSecondLanguage(str);
+        int[] tl = new TranscriptString().getThirdLanguage(str);
+        if (sl != null) {
+            termTwo.put(sl[0], sl[1]);
+        }
+
+        if (tl != null) {
+            termTwo.put(tl[0], tl[1]);
+        }
+    }
+
+    private static void setLanguagesTermThree(String str) {
+        if (str == null)
+            return;
+
+        int[] sl = new TranscriptString().getSecondLanguage(str);
+        int[] tl = new TranscriptString().getThirdLanguage(str);
+        if (sl != null) {
+            termThree.put(sl[0], sl[1]);
+        }
+
+        if (tl != null) {
+            termThree.put(tl[0], tl[1]);
+        }
+    }
+
+    private static ArrayList<Integer> convertKeysToArrayList(HashMap<Integer, Integer> hashMap) {
+        // Create an ArrayList from the key set of the HashMap
+        return new ArrayList<>(hashMap.keySet());
+    }
+
+    // needs to be called after initialisation
+    private static void addCompoundSubjects(Condition condition) {
+        for (int i = 0; i < condition.getCondition().size(); i++) {
+
+            ConditionBlock block = condition.getCondition().get(i);
+            Class<?> clazz = block.getClass();
+            if (clazz.getSimpleName() == "Compulsory") {
+                Compulsory compulsory = (Compulsory) block;
+                if (compulsory.getUnaryOperator() != Operator.NULL)
+                    continue;
+                // if the operator is null it usually contains multiple subjects.
+
+                averageSubjectSignifier.add(compulsory.getSubjects());
+
+            }
+
+        }
     }
 
     private static HashMap<Integer, Integer> getEvaluationSubjects(HashMap<Integer, Integer> subjects,
             HashMap<Integer, SubjectSignificance> subjectList) {
 
+        if (subjects == null)
+            return null;
         int[] keysArray = getKeysArray(subjects);
         int[] valuesArray = getValuesArray(subjects);
 

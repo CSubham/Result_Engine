@@ -1,16 +1,12 @@
 package model;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-import controller.Control;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import model.enums.Operator;
-import model.enums.SubjectSignificance;
+
 
 public class TestZone extends Application {
 

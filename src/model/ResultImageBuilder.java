@@ -2,17 +2,13 @@ package model;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-
 import javax.imageio.ImageIO;
-
-import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
 import javafx.scene.image.WritableImage;
@@ -23,144 +19,371 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import javafx.stage.Stage;
-import model.enums.SubjectSignificance;
 
 public class ResultImageBuilder {
 
     // public static void main(String[] args) {
-    //     launch(args);
+    // launch(args);
     // }
 
     // @Override
     // public void start(Stage stage) throws Exception {
-    //     HashMap<Integer, SubjectSignificance> gradeSubjectList = new HashMap<>();
-    //     gradeSubjectList.put(01, SubjectSignificance.EVALUATION);
-    //     gradeSubjectList.put(02, SubjectSignificance.EVALUATION);
+    // HashMap<Integer, SubjectSignificance> gradeSubjectList = new HashMap<>();
+    // gradeSubjectList.put(01, SubjectSignificance.EVALUATION);
+    // gradeSubjectList.put(02, SubjectSignificance.EVALUATION);
 
-    //     HashMap<Integer, String> subjects = new HashMap<>();
-    //     subjects.put(01, "SomeSubject");
-    //     subjects.put(02, "Some");
+    // HashMap<Integer, String> subjects = new HashMap<>();
+    // subjects.put(01, "SomeSubject");
+    // subjects.put(02, "Some");
 
-    //     HashMap<Integer, Integer> marks = new HashMap<>();
-    //     marks.put(01, 45);
-    //     marks.put(02, 45);
+    // HashMap<Integer, Integer> marks = new HashMap<>();
+    // marks.put(01, 45);
+    // marks.put(02, 45);
 
-    //     Scene scene = new Scene(createPETable(marks, null, null, subjects));
-    //     captureAndSaveVBoxImage((VBox) scene.getRoot(), "image.png");
+    // Scene scene = new Scene(createPETable(marks, null, null, subjects));
+    // captureAndSaveVBoxImage((VBox) scene.getRoot(), "image.png");
 
-    //     stage.setScene(scene);
-    //     stage.show();
-    //     stage.setResizable(true);
+    // stage.setScene(scene);
+    // stage.show();
+    // stage.setResizable(true);
 
     // }
 
-    // length of string
-    private int stringLength = 18;
-    private Font font = new Font("Cantarell", 30);
+    /* prior function call variables */
 
-    // length of the string
-    private int marksLength = 3;
-    private int cellStroke = 1;
+    // the variables here need to be set everytime for create subject table or
+    // create personal evaluation table
+    // they are just value holders and need respective data
+
+    // term keys and term marks holder for PE AND ST values
+    private HashMap<Integer, Integer> termOne = null;
+    private HashMap<Integer, Integer> termTwo = null;
+    private HashMap<Integer, Integer> termThree = null;
+
+    // keys and their respective subject names
+    private HashMap<Integer, String> subjects = null;
+
+    // a list of subjects which are compound, they can be major or minor(Subject
+    // codes)
+    private ArrayList<ArrayList<Integer>> averageSubjectsSignifier = null;
+
+    // this hashmap stores the value as per advanced term averager, if it is null it
+    // probably means that the result file is being generated for only one term
+    private HashMap<Integer, Integer> averagedSubjectsValue = null;
+
+    // major, minor subject codes
+    private ArrayList<Integer> majorSubCodes = null;
+    private ArrayList<Integer> minorSubCodes = null;
+
+    // This arraylist holds the data for ST table regarding which subjects have
+    // already been added to the table
+    // it is necessary as multiple subject codes corresponding to same compund
+    // subject might get added as separate subjects in the table
+
+    private ArrayList<Integer> addedSubjectCodes = new ArrayList<>();
+
+    /* PETable variables */
+
+    private String displayRowPE = "/model/ResultImageFxmls/personal_evaluation.fxml";
+
+    private Font subjectFontPE = new Font("Cantarell", 30);
+    private Font marksFontPE = new Font("Cantarell", 30);
+
+    private int cellStrokePE = 1;
 
     // length of rectangle strings are displayed within
-    private int subjectNameRectLen = 318;
-    private int marksDisplayRectLen = 89;
+    private int subjectNameRectHeightPE = -1;
+    private int subjectNameRectLenPE = 318;
 
-    public VBox createPETable(HashMap<Integer, Integer> termOne, HashMap<Integer, Integer> termTwo,
-            HashMap<Integer, Integer> termThree, HashMap<Integer, String> subjects) {
+    private int marksRectHeightPE = -1;
+    private int marksRectLenPE = 89;
 
-        VBox table = new VBox();
+    // label lengths
+
+    // note : if the value is -1 the label is centered as its size depends on the
+    // text it is holding, but if the size
+    // is equals to marks rect length the text in it will be left aligned
+
+    private int subjectLabelLengthPE = subjectNameRectLenPE;
+    private int marksLabelLengthPE = -1;
+
+    /* STable variables */
+
+    private String displayRowST = "/model/ResultImageFxmls/subjects.fxml";
+
+    private Font subjectFontST = new Font("Cantarell", 30);
+    private Font marksFontST = new Font("Cantarell", 30);
+
+    private int cellStrokeST = 1;
+
+    // length of rectangle strings are displayed within
+    private int subjectNameRectHeightST = -1;
+    private int subjectNameRectLenST = 318;
+
+    private int marksRectHeightST = -1;
+    private int marksRectLenST = 89;
+
+    // label lengths
+
+    private int subjectLabelLengthST = subjectNameRectLenPE;
+    private int marksLabelLengthST = -1;
+
+    // avg column dimensions
+
+    private int avgCellRectLength = 90;
+    private int avgCellRectHeight = -1;
+
+    // grade on average dimensions
+    private int govCellRectLength = 92;
+    private int govCellRectHeight = -1;
+
+    // Major, Minor display row
+    private int displayCellRectLength = 772;
+    private int displayCellRectHeight = -1;
+    private Font displayCellFont = new Font("Cantarell", 30);
+    private String majorString = "MAJOR";
+    private String minorString = "MINOR";
+    private int displayCellStroke = 4;
+    private int displayCellLabelLength = displayCellRectLength;
+
+    private HBox createPERow(String value, int marksOne, int marksTwo, int marksThree) {
+
+        HBox row = new HBox();
+
+        // subject name
+
+        // no need to pad the string as by default the texts in the labels will be left
+        // aligned in case label length is provided, but if we do not provide label
+        // length it will be centered in the
+        // cell so we only need to add leading zero
+
+        StackPane cell = createCell(value,
+                subjectFontPE,
+                cellStrokePE,
+                subjectNameRectHeightPE,
+                subjectNameRectLenPE,
+                subjectLabelLengthPE);
+        addChild(row, cell);
+
+        // term one marks
+        if (marksOne != -1) {
+            StackPane termOneCell = createCell(addLeadingZero(marksOne),
+                    marksFontPE,
+                    cellStrokePE,
+                    marksRectHeightPE,
+                    marksRectLenPE,
+                    marksLabelLengthPE);
+
+            addChild(row, termOneCell);
+
+        } else {
+
+            StackPane termOneCell = emptyMarksCellST();
+            addChild(row, termOneCell);
+
+        }
+
+        // term two marks
+
+        if (marksTwo != -1) {
+            StackPane termTwoCell = createCell(addLeadingZero(marksTwo),
+                    marksFontPE,
+                    cellStrokePE,
+                    marksRectHeightPE,
+                    marksRectLenPE,
+                    marksLabelLengthPE);
+
+            addChild(row, termTwoCell);
+
+        } else {
+
+            StackPane termTwoCell = emptyMarksCellST();
+            addChild(row, termTwoCell);
+
+        }
+
+        // term three cell
+
+        if (marksThree != -1) {
+            StackPane termThreeCell = createCell(addLeadingZero(marksThree),
+                    marksFontPE,
+                    cellStrokePE,
+                    marksRectHeightPE,
+                    marksRectLenPE,
+                    marksLabelLengthPE);
+
+            addChild(row, termThreeCell);
+
+        } else {
+
+            StackPane termThreeCell = emptyMarksCellST();
+            addChild(row, termThreeCell);
+
+        }
+
+        return row;
+
+    }
+
+    private HBox createSTRow(String value, int marksOne, int marksTwo, int marksThree) {
+
+        HBox row = new HBox();
+
+        // subject name
+
+        // no need to pad the string as by default the texts in the labels will be left
+        // aligned in case label length is provided, but if we do not provide label
+        // length it will be centered in the
+        // cell so we only need to add leading zero
+
+        StackPane cell = createCell(value,
+                subjectFontST,
+                cellStrokeST,
+                subjectNameRectHeightST,
+                subjectNameRectLenST,
+                subjectLabelLengthST);
+        addChild(row, cell);
+
+        // term one marks
+        if (marksOne != -1) {
+            StackPane termOneCell = createCell(addLeadingZero(marksOne),
+                    marksFontST,
+                    cellStrokeST,
+                    marksRectHeightST,
+                    marksRectLenST,
+                    marksLabelLengthST);
+
+            addChild(row, termOneCell);
+
+        } else {
+
+            StackPane termOneCell = emptyMarksCellPE();
+            addChild(row, termOneCell);
+
+        }
+
+        // term two marks
+
+        if (marksTwo != -1) {
+            StackPane termTwoCell = createCell(addLeadingZero(marksTwo),
+                    marksFontST,
+                    cellStrokeST,
+                    marksRectHeightST,
+                    marksRectLenST,
+                    marksLabelLengthST);
+
+            addChild(row, termTwoCell);
+
+        } else {
+
+            StackPane termTwoCell = emptyMarksCellPE();
+            addChild(row, termTwoCell);
+
+        }
+
+        // term three cell
+
+        if (marksThree != -1) {
+            StackPane termThreeCell = createCell(addLeadingZero(marksThree),
+                    marksFontST,
+                    cellStrokeST,
+                    marksRectHeightST,
+                    marksRectLenST,
+                    marksLabelLengthST);
+
+            addChild(row, termThreeCell);
+
+        } else {
+
+            StackPane termThreeCell = emptyMarksCellPE();
+            addChild(row, termThreeCell);
+
+        }
+
+        return row;
+
+    }
+
+    private StackPane emptyMarksCellPE() {
+        // the functions addLeadingZero returns an empty string for -1
+        return createCell(addLeadingZero(-1),
+                marksFontPE,
+                cellStrokePE,
+                marksRectHeightPE,
+                marksRectLenPE,
+                marksLabelLengthPE);
+    }
+
+    private StackPane emptyMarksCellST() {
+        // the functions addLeadingZero returns an empty string for -1
+        return createCell(addLeadingZero(-1),
+                marksFontST,
+                cellStrokeST,
+                marksRectHeightST,
+                marksRectLenST,
+                marksLabelLengthST);
+    }
+
+    private HBox getDisplayRow(String path) {
+
+        HBox displayRow = new HBox();
         try {
             // Load the FXML file
             FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/model/ResultImageFxmls/personal_evaluation.fxml"));
+                    getClass().getResource(path));
             Parent loadedContent = loader.load();
 
             // Add the loaded content to the "table" VBox
-            table.getChildren().add(loadedContent);
+            displayRow.getChildren().add(loadedContent);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // adding rows to the table
+        return displayRow;
 
-        int[] usableKeys = getUsableKeys(termOne, termTwo, termThree);
+    }
+
+    public VBox createPETable() {
+
+        VBox table = new VBox();
+        HBox displayRow = getDisplayRow(displayRowPE);
+        addChild(table, displayRow);
+
+        // the function can recieve null in any two parameters so we need to determine
+        // which variable has the values and only add the values into the cell which it
+        // belongs to keeping the other term cells empty
+
+        int[] usableKeys = getUsableKeys();
 
         // iterating and adding cells, the cells will still be added even if there is,
         // no value provided for the corresponding subject in a term
         for (int i = 0; i < usableKeys.length; i++) {
 
-            HBox row = new HBox();
+            int key = usableKeys[i];
+            // get the values
 
-            System.out.println(padString(subjects.get(usableKeys[i]), stringLength));
             // subject name
-            StackPane cell = createCell(subjects.get(usableKeys[i]), font, cellStroke,
-                    subjectNameRectLen, subjectNameRectLen);
-            addChild(row, cell);
+            String subjectName = subjects.get(key);
 
-            // term one marks
-            if (termOne != null) {
-                StackPane termOneCell = createCell(
-                        padString(addLeadingZero(termOne.get(usableKeys[i])), marksLength),
-                        font,
-                        cellStroke, marksDisplayRectLen, -1);
-                addChild(row, termOneCell);
+            // term one value
+            int marksOne = getMarksOne(key);
 
-            } else {
+            // term two value
+            int marksTwo = getMarksTwo(key);
 
-                StackPane termOneCell = emptyMarksCell();
-                addChild(row, termOneCell);
+            // term three value
 
-            }
+            int marksThree = getMarksThree(key);
 
-            // term two marks
-
-            if (termTwo != null) {
-                StackPane termTwoCell = createCell(
-                        padString(addLeadingZero(termTwo.get(usableKeys[i])), marksLength),
-                        font,
-                        cellStroke, marksDisplayRectLen, -1);
-                addChild(row, termTwoCell);
-
-            } else {
-
-                StackPane termTwoCell = emptyMarksCell();
-                addChild(row, termTwoCell);
-
-            }
-
-            // term three cell
-
-            if (termThree != null) {
-                StackPane termThreeCell = createCell(
-                        padString(addLeadingZero(termThree.get(usableKeys[i])), marksLength),
-                        font,
-                        cellStroke, marksDisplayRectLen, -1);
-                addChild(row, termThreeCell);
-
-            } else {
-
-                StackPane termThreeCell = emptyMarksCell();
-                addChild(row, termThreeCell);
-
-            }
-
+            HBox row = createPERow(subjectName, marksOne, marksTwo, marksThree);
             addChild(table, row);
+
         }
 
         return table;
     }
 
-    private StackPane emptyMarksCell() {
-        return createCell(
-                padString(addLeadingZero(-1), marksLength),
-                font,
-                cellStroke, marksDisplayRectLen, -1);
-    }
-
-    private int[] getUsableKeys(HashMap<Integer, Integer> termOne, HashMap<Integer, Integer> termTwo,
-            HashMap<Integer, Integer> termThree) {
+    private int[] getUsableKeys() {
 
         int[] usableKeys = null;
         try {
@@ -181,19 +404,322 @@ public class ResultImageBuilder {
     public VBox createSubjectTable() {
 
         VBox table = new VBox();
-        try {
-            // Load the FXML file
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/model/ResultImageFxmls/subjects.fxml"));
-            Parent loadedContent = loader.load();
+        HBox displayRow = getDisplayRow(displayRowST);
+        addChild(table, displayRow);
 
-            // Add the loaded content to the "table" VBox
-            table.getChildren().add(loadedContent);
-        } catch (Exception e) {
-            e.printStackTrace();
+        // add major title to the result
+
+        cellLabelAlignment = TextAlignment.CENTER;
+        StackPane majorCell = createCell(majorString,
+                displayCellFont,
+                displayCellStroke,
+                displayCellRectHeight,
+                displayCellRectLength,
+                displayCellLabelLength);
+
+        addChild(table, addChild(new HBox(), majorCell));
+
+        cellLabelAlignment = TextAlignment.LEFT;
+        // iterating and adding cells, the cells will still be added even if there is,
+        // no value provided for the corresponding subject in a term
+        for (int i : majorSubCodes) {
+
+            int key = i;
+
+            // confirming if it is added or not
+
+            if (addedSubjectCodes.contains(key) == true)
+                continue;
+
+            // checking whether the key is part of any compound subject
+
+            ArrayList<Integer> compoundSubject = findArrayList(averageSubjectsSignifier, key);
+
+            if (compoundSubject != null) {
+                HBox compoundRow = createCompoundSubjectRow(compoundSubject);
+                addChild(table, compoundRow);
+                continue;
+
+            }
+
+            // get the values
+
+            // subject name
+            String subjectName = subjects.get(key);
+
+            // term one value
+            int marksOne = getMarksOne(key);
+
+            // term two value
+            int marksTwo = getMarksTwo(key);
+
+            // term three value
+
+            int marksThree = getMarksThree(key);
+
+            HBox row = createSTRow(subjectName, marksOne, marksTwo, marksThree);
+
+            int avg = -1;
+            if (averagedSubjectsValue != null) {
+                averagedSubjectsValue.get(key);
+            }
+            row = addColToRow(row, avg);
+
+            addChild(table, row);
+
+        }
+
+        // add minor title to the result
+        if (minorSubCodes.size() != 0) {
+            cellLabelAlignment = TextAlignment.CENTER;
+            StackPane minorCell = createCell(minorString,
+                    displayCellFont,
+                    displayCellStroke,
+                    displayCellRectHeight,
+                    displayCellRectLength,
+                    displayCellLabelLength);
+
+            addChild(table, addChild(new HBox(), minorCell));
+            cellLabelAlignment = TextAlignment.LEFT;
+
+        }
+
+        for (int i : minorSubCodes) {
+
+            int key = i;
+
+            // confirming if it is added or not
+
+            if (addedSubjectCodes.contains(key) == true)
+                continue;
+
+            // checking whether the key is part of any compound subject
+
+            ArrayList<Integer> compoundSubject = findArrayList(averageSubjectsSignifier, key);
+            if (compoundSubject != null) {
+                HBox compoundRow = createCompoundSubjectRow(compoundSubject);
+                addChild(table, compoundRow);
+                continue;
+
+            }
+
+            // get the values
+
+            // subject name
+            String subjectName = subjects.get(key);
+
+            // term one value
+            int marksOne = getMarksOne(key);
+
+            // term two value
+            int marksTwo = getMarksTwo(key);
+
+            // term three value
+
+            int marksThree = getMarksThree(key);
+
+            HBox row = createSTRow(subjectName, marksOne, marksTwo, marksThree);
+            int avg = -1;
+            if (averagedSubjectsValue != null) {
+                averagedSubjectsValue.get(key);
+            }
+            row = addColToRow(row, avg);
+
+            addChild(table, row);
+
         }
 
         return table;
+    }
+
+    private HBox createCompoundSubjectRow(ArrayList<Integer> compoundSubject) {
+
+        // stores overall term average marks
+        ArrayList<Integer> marks = new ArrayList<>();
+
+        // initial compound row holder
+
+        VBox compoundRow = new VBox();
+        int rectHeightFact = 0;
+
+        for (int i : compoundSubject) {
+            if (averagedSubjectsValue != null) {
+
+                marks.add(averagedSubjectsValue.get(i));
+            }
+
+            // subject name
+            String subjectName = subjects.get(i);
+
+            // term one value
+            int marksOne = getMarksOne(i);
+
+            // term two value
+            int marksTwo = getMarksTwo(i);
+
+            // term three value
+            int marksThree = getMarksThree(i);
+
+            HBox row = createSTRow(subjectName, marksOne, marksTwo, marksThree);
+
+            addChild(compoundRow, row);
+            rectHeightFact++;
+            addedSubjectCodes.add(i);
+
+        }
+
+        // generally if its a compound subject and its 2nd or 3rd term we have the
+        // required data in averageSubjectsValue
+        // in case it is null we only need to print hollow boxes
+
+        HBox row = new HBox();
+        row = addColToCompoundRow(compoundRow, calculateAverage(marks), rectHeightFact);
+
+        return row;
+    }
+
+    public void setTermOne(HashMap<Integer, Integer> termOne) {
+        this.termOne = termOne;
+    }
+
+    public void setTermTwo(HashMap<Integer, Integer> termTwo) {
+        this.termTwo = termTwo;
+    }
+
+    public void setTermThree(HashMap<Integer, Integer> termThree) {
+        this.termThree = termThree;
+    }
+
+    public void setSubjects(HashMap<Integer, String> subjects) {
+        this.subjects = subjects;
+    }
+
+    public void setAverageSubjectsSignifier(ArrayList<ArrayList<Integer>> averageSubjectsSignifier) {
+        this.averageSubjectsSignifier = averageSubjectsSignifier;
+    }
+
+    public void setAveragedSubjectsValue(HashMap<Integer, Integer> averagedSubjectsValue) {
+        this.averagedSubjectsValue = averagedSubjectsValue;
+    }
+
+    public void setMajorSubCodes(ArrayList<Integer> majorSubCodes) {
+        this.majorSubCodes = majorSubCodes;
+    }
+
+    public void setMinorSubCodes(ArrayList<Integer> minorSubCodes) {
+        this.minorSubCodes = minorSubCodes;
+    }
+
+    private int calculateAverage(ArrayList<Integer> list) {
+        if (list.size() == 0) {
+            return -1; // Return -1 if the list is empty
+        }
+
+        int sum = 0;
+        for (int number : list) {
+            sum += number;
+        }
+
+        return sum / list.size(); // Calculate and return the average
+    }
+
+    private HBox addColToCompoundRow(VBox compoundRow, int average, int multiplyFactor) {
+
+        HBox row = new HBox();
+        row.getChildren().add(compoundRow);
+
+        StackPane avg = createCell(addLeadingZero(average),
+                marksFontST,
+                cellStrokeST,
+                avgCellRectHeight * multiplyFactor,
+                avgCellRectLength,
+                marksLabelLengthST);
+
+        StackPane gov = createCell(addLeadingZero(calculateGrade(average)),
+                marksFontST,
+                cellStrokeST,
+                govCellRectHeight * multiplyFactor,
+                govCellRectLength,
+                marksLabelLengthST);
+
+        addChild(row, avg);
+        addChild(row, gov);
+        return row;
+
+    }
+
+    private HBox addColToRow(HBox row, int average) {
+
+        StackPane avg = createCell(addLeadingZero(average),
+                marksFontST,
+                cellStrokeST,
+                avgCellRectHeight,
+                avgCellRectLength,
+                marksLabelLengthST);
+
+        StackPane gov = createCell(addLeadingZero(calculateGrade(average)),
+                marksFontST,
+                cellStrokeST,
+                govCellRectHeight,
+                govCellRectLength,
+                marksLabelLengthST);
+
+        addChild(row, avg);
+        addChild(row, gov);
+        return row;
+
+    }
+
+    // INCOMPLETE
+    private int calculateGrade(int value) {
+
+        return value;
+    }
+
+    public ArrayList<Integer> findArrayList(ArrayList<ArrayList<Integer>> averageSubjects, int target) {
+        for (int i = 0; i < averageSubjects.size(); i++) {
+            ArrayList<Integer> innerList = averageSubjects.get(i);
+            if (innerList.contains(target)) {
+
+                return innerList;
+            }
+        }
+        return null; // Return null if the target is not found in any ArrayList
+    }
+
+    private int getMarksOne(int key) {
+
+        int marksOne = -1;
+        try {
+            marksOne = termOne.get(key);
+
+        } catch (Exception e) {
+        }
+
+        return marksOne;
+
+    }
+
+    private int getMarksTwo(int key) {
+        int marksTwo = -1;
+        try {
+            marksTwo = termTwo.get(key);
+
+        } catch (Exception e) {
+        }
+
+        return marksTwo;
+    }
+
+    private int getMarksThree(int key) {
+        int marksThree = -1;
+        try {
+            marksThree = termThree.get(key);
+
+        } catch (Exception e) {
+        }
+
+        return marksThree;
     }
 
     public static HBox createRow() {
@@ -204,15 +730,19 @@ public class ResultImageBuilder {
     // a cell is nothing but a square which holds an empty label inside it(Stack
     // pane)
 
-    public StackPane createCell(String text, Font font, int stroke, int rectLength, int labelLength) {
+    private TextAlignment cellLabelAlignment = TextAlignment.LEFT;
+
+    public StackPane createCell(String text, Font font, int stroke, int rectHeight, int rectLength, int labelLength) {
         Label label = new Label();
         label.setText(text);
-        label.setAlignment(Pos.CENTER_LEFT); // Align label to the left
+        label.setAlignment(Pos.CENTER); // Align label to the left
         label.setFont(font);
+
         if (labelLength > 0) {
             label.setPrefWidth(labelLength);
         }
-        label.textAlignmentProperty().set(TextAlignment.LEFT);
+
+        label.textAlignmentProperty().set(cellLabelAlignment);
 
         // Create a rectangle with the specified width and some padding
         Rectangle rectangle = new Rectangle();
@@ -223,9 +753,14 @@ public class ResultImageBuilder {
         // Set the width of the rectangle to the provided length
         rectangle.setWidth(rectLength);
 
-        // Bind the height of the rectangle to the height of the label with additional
-        // padding
-        rectangle.heightProperty().bind(label.heightProperty().add(10));
+        if (rectHeight != -1) {
+            // Set the height of the rectangle to the provided height
+            rectangle.setHeight(rectHeight);
+        } else {
+            // Bind the height of the rectangle to the height of the label with additional
+            // padding
+            rectangle.heightProperty().bind(label.heightProperty().add(10));
+        }
 
         // Create a StackPane and add the rectangle and label to it
         StackPane stackPane = new StackPane();

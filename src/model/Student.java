@@ -7,12 +7,12 @@ public class Student {
     private int roll_no;
     private int pin;
     private String name;
-    private HashMap<Integer, Integer> subjects;
-    private int[] secondLanguage;
-    private int[] thirdLanguage;
-    private String termOne;
-    private String termTwo;
-    private String termThree;
+    private HashMap<Integer, Integer> subjects = null;
+    private int[] secondLanguage = null;
+    private int[] thirdLanguage = null;
+    private String termOne = null;
+    private String termTwo= null;
+    private String termThree = null;
     // class basically, as we cannot use it being reserved
     private String grade;
 
