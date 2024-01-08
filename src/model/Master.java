@@ -16,6 +16,9 @@ import java.util.Map;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import model.Condition_blocks.Compulsory;
+import model.Condition_blocks.ConditionBlock;
+import model.enums.Operator;
 import model.enums.SubjectSignificance;
 
 public class Master extends Application {
@@ -166,10 +169,10 @@ public class Master extends Application {
 
     }
 
-    public static void printHashMap(Map<Integer, SubjectSignificance> hashMap) {
-        for (Map.Entry<Integer, SubjectSignificance> entry : hashMap.entrySet()) {
+    public static void printHashMap(Map<Integer, Float> hashMap) {
+        for (Map.Entry<Integer, Float> entry : hashMap.entrySet()) {
             int key = entry.getKey();
-            SubjectSignificance value = entry.getValue();
+            float value = entry.getValue();
             System.out.println("Key: " + key + ", Value: " + value);
         }
     }
@@ -379,10 +382,34 @@ public class Master extends Application {
         return keysArray;
     }
 
+    // no need to use n
+    private static int[] getKeysArray(HashMap<Integer, Float> hashMap, int n) {
+
+        int[] keysArray = new int[hashMap.size()];
+        int index = 0;
+        for (int key : hashMap.keySet()) {
+            keysArray[index] = key;
+            index++;
+        }
+        return keysArray;
+    }
+
     private static int[] getValuesArray(HashMap<Integer, Integer> hashMap) {
+
         int[] valuesArray = new int[hashMap.size()];
         int index = 0;
         for (Integer value : hashMap.values()) {
+            valuesArray[index] = value;
+            index++;
+        }
+        return valuesArray;
+    }
+
+    private static float[] getValuesArray(HashMap<Integer, Float> hashMap, int n) {
+
+        float[] valuesArray = new float[hashMap.size()];
+        int index = 0;
+        for (float value : hashMap.values()) {
             valuesArray[index] = value;
             index++;
         }
@@ -745,10 +772,15 @@ public class Master extends Application {
 
     // selected terms = (position+1) represents terms if value at that pos > 0 it is
     // selected
+
+    // stores in use term data
+    private static ArrayList<String> termData = new ArrayList<>();
+
     public static void makeResult(String grade, String title, int[] selectedTerms, float[] averagerValues)
             throws SQLException {
 
         ArrayList<Integer> pins = retrievePinsByGrade(grade);
+
         // a tweak here so below class 10 the number of grades and conditions saved are
         // minimal, basically same grades
         // will have same grade subjectlist till 10 so below 11 we can store only for
@@ -760,61 +792,236 @@ public class Master extends Application {
         HashMap<Integer, String> subjects = retrieveSubjects();
         Condition condition = getConditionBlock(Subject.gradeStringToInteger(grade));
 
+        // getting compound subject codes
+        ArrayList<ArrayList<Integer>> averageSubjectSignifier = getCompoundSubjects(condition);
+        Result.setAverageSubjectSignifier(averageSubjectSignifier);
+
+        // fetches a sorted arrayList largest to smallest which contains percentage of
+        // students
+
+        HashMap<Integer, Float> percentage = getRankByPercentage(pins, averageSubjectSignifier, selectedTerms,
+                averagerValues, gradeSubjectList);
+
         for (int i : pins) {
 
-            ArrayList<String> termData = new ArrayList<>();
-
             Student student = getStudentData(i);
+            // setting the termData values which will be used for this sub operation
+            student = setRequiredTerms(selectedTerms, student);
 
-            for (int j = 0; j < selectedTerms.length; j++) {
-                if (selectedTerms[j] > 0) {
-                    termData.add(
-
-                            switch (j) {
-                                case 0 -> student.getTermOne();
-                                case 1 -> student.getTermTwo();
-                                case 2 -> student.getTermThree();
-                                default -> throw new IllegalArgumentException("Unexpected value: " + j);
-                            }
-
-                    );
-
-                } else {
-                    switch (j) {
-                        case 0 -> student.setTermOne(null);
-                        case 1 -> student.setTermTwo(null);
-                        case 2 -> student.setTermThree(null);
-                    }
-                }
-
-            }
-
-            AdvancedTermAverager advancedTermAverager = new AdvancedTermAverager();
-            // subject list is grade subject list
-            if (termData.size() == 2) {
-                student.setSubjects(new TranscriptString().convertToHashMap(advancedTermAverager.averageofTwo(
-                        gradeSubjectList, termData.get(0), termData.get(1), averagerValues[0],
-                        averagerValues[1], averagerValues[2], averagerValues[3])));
-
-            } else if (termData.size() == 3) {
-
-                student.setSubjects(new TranscriptString().convertToHashMap(advancedTermAverager.averageofThree(
-                        gradeSubjectList, termData.get(0), termData.get(1), termData.get(2), averagerValues[0],
-                        averagerValues[1], averagerValues[2], averagerValues[3], averagerValues[4])));
-
-            } else {
-                student.setSubjects(new TranscriptString().convertToHashMap(termData.get(0)));
-            }
+            // setting the subjects of the student by averaging the terms if required
+            student = setAverageSubject(student, gradeSubjectList, averagerValues);
 
             // store file and store in created folder
-            Result.createResultImageFile(student, title, condition, gradeSubjectList, subjects);
+            Result.createResultImageFile(student, title, condition, gradeSubjectList, subjects, percentage);
+
+            // term data needs to be cleared after every sub operation for next use
+            termData.clear();
 
         }
 
     }
 
-    public static void makeResult(int pin) {
+    private static Student setAverageSubject(Student student, HashMap<Integer, SubjectSignificance> gradeSubjectList,
+            float[] averagerValues) {
+        AdvancedTermAverager advancedTermAverager = new AdvancedTermAverager();
+        // subject list is grade subject list
+        if (termData.size() == 2) {
+            student.setSubjects(new TranscriptString().convertToHashMap(advancedTermAverager.averageofTwo(
+                    gradeSubjectList, termData.get(0), termData.get(1), averagerValues[0],
+                    averagerValues[1], averagerValues[2], averagerValues[3])));
 
+        } else if (termData.size() == 3) {
+
+            student.setSubjects(new TranscriptString().convertToHashMap(advancedTermAverager.averageofThree(
+                    gradeSubjectList, termData.get(0), termData.get(1), termData.get(2), averagerValues[0],
+                    averagerValues[1], averagerValues[2], averagerValues[3], averagerValues[4])));
+
+        } else {
+            student.setSubjects(new TranscriptString().convertToHashMap(termData.get(0)));
+        }
+
+        return student;
+
+    }
+
+    // list of compound subjects
+
+    private static ArrayList<ArrayList<Integer>> getCompoundSubjects(Condition condition) {
+
+        ArrayList<ArrayList<Integer>> compoundSubjects = new ArrayList<>();
+        for (int i = 0; i < condition.getCondition().size(); i++) {
+
+            ConditionBlock block = condition.getCondition().get(i);
+            Class<?> clazz = block.getClass();
+            if (clazz.getSimpleName() == "Compulsory") {
+                Compulsory compulsory = (Compulsory) block;
+                if (compulsory.getUnaryOperator() != Operator.NULL)
+                    continue;
+                // if the operator is null it usually contains multiple subjects.
+
+                compoundSubjects.add(compulsory.getSubjects());
+
+            }
+
+        }
+
+        return compoundSubjects;
+    }
+
+    // only keeps the values of the terms which will be used
+    private static Student setRequiredTerms(int[] selectedTerms, Student student) {
+
+        for (int j = 0; j < selectedTerms.length; j++) {
+            if (selectedTerms[j] > 0) {
+                termData.add(
+
+                        switch (j) {
+                            case 0 -> student.getTermOne();
+                            case 1 -> student.getTermTwo();
+                            case 2 -> student.getTermThree();
+                            default -> throw new IllegalArgumentException("Unexpected value: " + j);
+                        }
+
+                );
+
+            } else {
+                switch (j) {
+                    case 0 -> student.setTermOne(null);
+                    case 1 -> student.setTermTwo(null);
+                    case 2 -> student.setTermThree(null);
+                }
+            }
+
+        }
+
+        return student;
+
+    }
+
+    private static void makeResult(int pin, String title, int[] selectedTerms, float[] averagerValues) {
+
+    }
+
+    // the percentage for every student is calculated and stored and then sorted to
+    // estimate rank
+    // which will be then (i+1) and itll be displayed only if the student has passed
+    private static HashMap<Integer, Float> getRankByPercentage(ArrayList<Integer> pins,
+            ArrayList<ArrayList<Integer>> averageSubjectSignifier, int[] selectedTerms, float[] averagerValues,
+            HashMap<Integer, SubjectSignificance> gradeSubjectList) throws SQLException {
+
+        // Hashmap to store percentage by key pin
+        HashMap<Integer, Float> average = new HashMap<>();
+
+        int value = 0;
+        int divisorFact = 0;
+        for (int i : pins) {
+            ArrayList<Integer> addedSubjects = new ArrayList<>();
+            Student student = getStudentData(i);
+
+            // setting the termData values which will be used for this sub operation
+            student = setRequiredTerms(selectedTerms, student);
+
+            // setting the subjects of the student by averaging the terms if required
+            student = setAverageSubject(student, gradeSubjectList, averagerValues);
+            // clear termdata
+            termData.clear();
+
+            // iterating through the avg signifier and adding the calculated average values
+            for (ArrayList<Integer> compoundSubject : averageSubjectSignifier) {
+
+                value += calculateAverage(compoundSubject, student.getSubjects());
+                addedSubjects.addAll(compoundSubject);
+                divisorFact++;
+
+            }
+
+            // after we have iterated through compound subjects there must be subjects left
+            // in the major and minor category
+
+            int[] keysArray = getKeysArray(student.getSubjects());
+            for (int key : keysArray) {
+
+                if (addedSubjects.contains(key))
+                    continue;
+
+                if (gradeSubjectList.get(key) == SubjectSignificance.EVALUATION)
+                    continue;
+
+                value += switch (gradeSubjectList.get(key)) {
+                    case MAJOR, MINOR -> student.getSubjects().get(key);
+
+                    default -> 0;
+                };
+
+                divisorFact++;
+
+            }
+
+            // putting pin and percentage of student in hm
+
+            average.put(student.getPin(), (float) (value / divisorFact));
+
+            // resetting variables
+            value = 0;
+            divisorFact = 0;
+
+        }
+
+        return sortHashMap(average);
+
+    }
+
+    private static HashMap<Integer, Float> sortHashMap(HashMap<Integer, Float> average) {
+
+        HashMap<Integer, Float> sortedHashMap = new HashMap<>();
+        int[] keysArray = getKeysArray(average, -1);
+        float[] valuesArray = getValuesArray(average, -1);
+
+        for (int i = 0; i < valuesArray.length; i++) {
+            for (int j = 0; j < valuesArray.length - 1 - i; j++) {
+
+                if (valuesArray[j] < valuesArray[j + 1]) {
+                    // swapping values
+                    float temp = valuesArray[j];
+                    valuesArray[j] = valuesArray[j + 1];
+                    valuesArray[j + 1] = temp;
+
+                    // swapping pins
+                    int flag = keysArray[j];
+                    keysArray[j] = keysArray[j + 1];
+                    keysArray[j + 1] = flag;
+
+                }
+            }
+        }
+
+        for (int i = 0; i < keysArray.length; i++) {
+            sortedHashMap.put(keysArray[i], valuesArray[i]);
+
+        }
+
+        return sortedHashMap;
+
+    }
+
+    // calculate average of subjects in ArrayList<Integer> which is part of
+    // ArrayList<ArrayList<Integer>>
+    private static int calculateAverage(ArrayList<Integer> list, HashMap<Integer, Integer> subjects) {
+
+        if (list.size() == 0) {
+            return -1; // Return -1 if the list is empty
+        }
+
+        int divFact = 0;
+        int sum = 0;
+        for (int number : list) {
+
+            sum += subjects.get(number);
+            ;
+            divFact++;
+        }
+
+        return sum / divFact; // Calculate and return the average
     }
 
     private static HashMap<Integer, String> retrieveSubjects() throws SQLException {

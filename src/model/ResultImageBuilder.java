@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.imageio.ImageIO;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
@@ -343,6 +346,114 @@ public class ResultImageBuilder {
 
     }
 
+    public VBox createPassStatusBox(boolean hasPassed, HashMap<Integer, Float> percentage, int pin, float attendance) {
+
+        // passed or fail
+        String result = "RESULT : " + ((hasPassed == true) ? "PASSED" : "FAILED");
+
+        Font font = new Font("Arial", 30);
+        StackPane resultLabel = createCell(result, font, 0, subjectNameRectHeightPE, -1, -1);
+
+        // position
+        int rank = -1;
+        if (hasPassed) {
+            rank = findPosition(percentage, pin);
+
+        }
+
+        String position = "POSITION : " + ((rank == -1) ? "-- " : rank) + "/ " + percentage.keySet().size();
+        StackPane positionLabel = createCell(position, font, 0, subjectNameRectHeightPE, -1, -1);
+
+        // percentage
+        String percentageOfMarks = "PERCENTAGE OF MARKS : " + percentage.get(pin)+"%";
+        StackPane percentageLabel = createCell(percentageOfMarks, font, 0, subjectNameRectHeightPE, -1, -1);
+
+        // divison
+        String divison = "DIVISON : ";
+        if (hasPassed) {
+            divison += getDiv(percentage.get(pin));
+        }
+        StackPane divisonLabel = createCell(divison, font, 0, subjectNameRectHeightPE, -1, -1);
+
+        // attendance 
+        String present = "ATTENDANCE : "+attendance+"%";
+         StackPane presentLabel = createCell(present, font, 0, subjectNameRectHeightPE, -1, -1);
+
+
+        HBox resultRow = new HBox();
+        addChild(resultRow, resultLabel);
+        HBox positionRow = new HBox();
+        addChild(positionRow, positionLabel);
+        HBox percentageRow = new HBox();
+        addChild(percentageRow, percentageLabel);
+        HBox divisonRow = new HBox();
+        addChild(divisonRow, divisonLabel);
+        HBox presentRow = new HBox();
+        addChild(presentRow, presentLabel);
+
+        VBox rowHolder = new VBox();
+        addChild(rowHolder, resultRow);
+        addChild(rowHolder, positionRow);
+        addChild(rowHolder, percentageRow);
+        addChild(rowHolder, divisonRow);
+        addChild(rowHolder, presentRow);
+
+        StackPane statusBox = addRectangleOverVBox(rowHolder, (double) 585, (double) 200, 3);
+        VBox rectStatusBox = new VBox();
+        rectStatusBox.getChildren().add(statusBox);
+        return rectStatusBox;
+
+    }
+
+    private static String getDiv(float percentage) {
+        if (percentage >= 81 && percentage <= 100) {
+            return "DISTINCTION DIV";
+        } else if (percentage >= 60 && percentage <= 80) {
+            return "1st DIV";
+        } else if (percentage >= 50 && percentage <= 59) {
+            return "2nd DIV";
+        } else if (percentage >= 45 && percentage <= 49) {
+            return "3rd DIV";
+        } else if (percentage >= 40 && percentage <= 44) {
+            return "PASS DIV";
+        } else {
+            return "----";
+        }
+
+    }
+
+    public static StackPane addRectangleOverVBox(VBox vBox, double length, double height, double stroke) {
+        StackPane stackPane = new StackPane();
+
+        // Create a rectangle with the specified width, height, and stroke
+        Rectangle rectangle = new Rectangle(length, height);
+
+        rectangle.setFill(Color.TRANSPARENT);
+        rectangle.setStroke(Color.BLACK);
+        rectangle.setStrokeWidth(stroke);
+
+        // Add the rectangle as a child to the StackPane
+        stackPane.getChildren().add(rectangle);
+
+        // Add the VBox as a child to the StackPane (it will be positioned over the
+        // rectangle)
+        stackPane.getChildren().add(vBox);
+
+        return stackPane;
+    }
+
+    public static int findPosition(HashMap<Integer, Float> hashMap, int target) {
+        List<Integer> keyList = hashMap.keySet().stream().collect(Collectors.toList());
+
+        for (int i = 0; i < keyList.size(); i++) {
+            if (keyList.get(i) == target) {
+                return i + 1; // Adding 1 to make it a 1-based index
+            }
+        }
+
+        return -1; // Return -1 if the target is not found
+    }
+
     public VBox createPETable() {
 
         VBox table = new VBox();
@@ -480,9 +591,10 @@ public class ResultImageBuilder {
                     displayCellLabelLength);
 
             addChild(table, addChild(new HBox(), minorCell));
-            cellLabelAlignment = TextAlignment.LEFT;
 
         }
+
+        cellLabelAlignment = TextAlignment.LEFT;
 
         for (int i : minorSubCodes) {
 
@@ -779,17 +891,6 @@ public class ResultImageBuilder {
         } else {
             // Multi-digit case: No changes
             return String.valueOf(digit);
-        }
-    }
-
-    private static String padString(String input, int length) {
-        if (input.length() < length) {
-            int requiredPadding = length - input.length();
-            return input + " ".repeat(requiredPadding);
-        } else if (input.length() > length) {
-            return input.substring(0, length);
-        } else {
-            return input;
         }
     }
 
