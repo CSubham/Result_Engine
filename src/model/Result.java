@@ -235,7 +235,7 @@ public class Result {
 
         VBox STable = rib.createSubjectTable();
         // the code for attendance is missing
-        VBox passStatusBox = rib.createPassStatusBox(hasPassed,percentage,student.getPin(),-1);
+        VBox passStatusBox = rib.createPassStatusBox(hasPassed, percentage, student.getPin(), -1);
         PETable.getChildren().add(passStatusBox);
 
         // the below code is actually meant to done in ResultImageBuilder
@@ -243,8 +243,13 @@ public class Result {
         HBox joiner = new HBox();
         VBox result = new VBox();
 
+        VBox termRow = rib.getTermRow(title, student.getRoll_no(), student.getName(), student.getGrade());
+        result.getChildren().add(termRow);
         joiner.getChildren().addAll(PETable, STable);
         result.getChildren().add(joiner);
+        // remarks row
+        VBox remarksRow = rib.getRemarksBox();
+        result.getChildren().add(remarksRow);
         Scene scene = new Scene(result);
 
         ResultImageBuilder.captureAndSaveVBoxImage((VBox) scene.getRoot(), student.getName() + ".png");

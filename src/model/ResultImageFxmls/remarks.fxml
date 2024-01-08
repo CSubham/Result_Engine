@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="1358.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Text layoutX="24.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="REMARKS :" wrappingWidth="124.70703125">
+         <font>
+            <Font name="Cantarell Bold" size="24.0" />
+         </font>
+      </Text>
+      <Text fontSmoothingType="LCD" layoutX="1132.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SIGNATURE GUARDIAN" textAlignment="CENTER" wrappingWidth="90.70703125">
+         <font>
+            <Font name="System Bold Italic" size="11.0" />
+         </font>
+      </Text>
+      <Text fontSmoothingType="LCD" layoutX="139.0" layoutY="219.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SIGNATURE CLASS TEACHER" textAlignment="CENTER" wrappingWidth="105.70703125">
+         <font>
+            <Font name="System Bold Italic" size="11.0" />
+         </font>
+      </Text>
+      <Text fontSmoothingType="LCD" layoutX="634.0" layoutY="217.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SIGNATURE PRINCIPAL" textAlignment="CENTER" wrappingWidth="90.70703125">
+         <font>
+            <Font name="System Bold Italic" size="11.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>

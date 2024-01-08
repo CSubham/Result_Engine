@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javafx.application.Application;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import model.Condition_blocks.Compulsory;
 import model.Condition_blocks.ConditionBlock;
@@ -165,7 +166,7 @@ public class Master extends Application {
     @Override
     public void start(Stage arg0) throws Exception {
         int[] selectedTerms = { 1, 0, 0 };
-        makeResult("1a", "pain stacking", selectedTerms, null);
+        makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null);
 
     }
 
@@ -661,6 +662,8 @@ public class Master extends Application {
         return subject.subjectListToHashMap(gradeSubjectList);
 
     }
+
+    
 
     public static void deleteGradeSubjectList(int grade) {
 

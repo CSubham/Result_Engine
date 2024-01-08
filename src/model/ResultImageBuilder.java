@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -24,6 +25,15 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
 public class ResultImageBuilder {
+
+    @FXML
+    private HBox title;
+    @FXML
+    private HBox rollNo;
+    @FXML
+    private HBox grade;
+    @FXML
+    private HBox name;
 
     // public static void main(String[] args) {
     // launch(args);
@@ -84,6 +94,9 @@ public class ResultImageBuilder {
     // subject might get added as separate subjects in the table
 
     private ArrayList<Integer> addedSubjectCodes = new ArrayList<>();
+
+    private String remarksRow = "/model/ResultImageFxmls/remarks.fxml";
+    private String titleRow = "/model/ResultImageFxmls/term.fxml";
 
     /* PETable variables */
 
@@ -317,6 +330,20 @@ public class ResultImageBuilder {
                 marksLabelLengthPE);
     }
 
+    public VBox getRemarksBox() {
+
+        HBox row = getDisplayRow(remarksRow);
+        VBox rectRow = new VBox();
+
+        rectRow.getChildren().add(row);
+
+        VBox finalRemarks = new VBox();
+        finalRemarks.getChildren().add(addRectangleOverVBox(rectRow, (double) 1358, (double) 250, (double) 3));
+
+        return finalRemarks;
+
+    }
+
     private StackPane emptyMarksCellST() {
         // the functions addLeadingZero returns an empty string for -1
         return createCell(addLeadingZero(-1),
@@ -325,6 +352,51 @@ public class ResultImageBuilder {
                 marksRectHeightST,
                 marksRectLenST,
                 marksLabelLengthST);
+    }
+
+    public VBox getTermRow(String title, int roll, String name, String grade) {
+
+        Font titleFont = new Font("Arial", 50);
+
+        cellLabelAlignment = TextAlignment.CENTER;
+        labelAlignment = Pos.CENTER;
+        StackPane titleCell = createCell(title,
+                titleFont,
+                0,
+                100,
+                1300,
+                1300);
+
+        cellLabelAlignment = TextAlignment.LEFT;
+        labelAlignment = Pos.CENTER_LEFT;
+        Font subFont = new Font("Arial", 30);
+        StackPane rollGradeCell = createCell("ROLL :" + roll + "   " + "CLASS :" + grade.toUpperCase(),
+                subFont,
+                0,
+                100,
+                1300,
+                1300);
+
+        StackPane nameCell = createCell("NAME :" + name,
+                subFont,
+                0,
+                100,
+                1300,
+                1300);
+
+        HBox termRow = new HBox();
+        termRow.getChildren().add(titleCell);
+
+        VBox joiner = new VBox();
+        joiner.getChildren().addAll(rollGradeCell, nameCell);
+
+        VBox finalRow = new VBox();
+        finalRow.getChildren().addAll(termRow, joiner);
+
+        VBox rectRow = new VBox();
+        rectRow.getChildren().add(addRectangleOverVBox(finalRow, (double) 1360, (double) 300, (double) 4));
+        return rectRow;
+
     }
 
     private HBox getDisplayRow(String path) {
@@ -365,7 +437,7 @@ public class ResultImageBuilder {
         StackPane positionLabel = createCell(position, font, 0, subjectNameRectHeightPE, -1, -1);
 
         // percentage
-        String percentageOfMarks = "PERCENTAGE OF MARKS : " + percentage.get(pin)+"%";
+        String percentageOfMarks = "PERCENTAGE OF MARKS : " + percentage.get(pin) + "%";
         StackPane percentageLabel = createCell(percentageOfMarks, font, 0, subjectNameRectHeightPE, -1, -1);
 
         // divison
@@ -375,10 +447,9 @@ public class ResultImageBuilder {
         }
         StackPane divisonLabel = createCell(divison, font, 0, subjectNameRectHeightPE, -1, -1);
 
-        // attendance 
-        String present = "ATTENDANCE : "+attendance+"%";
-         StackPane presentLabel = createCell(present, font, 0, subjectNameRectHeightPE, -1, -1);
-
+        // attendance
+        String present = "ATTENDANCE : " + attendance + "%";
+        StackPane presentLabel = createCell(present, font, 0, subjectNameRectHeightPE, -1, -1);
 
         HBox resultRow = new HBox();
         addChild(resultRow, resultLabel);
@@ -521,6 +592,7 @@ public class ResultImageBuilder {
         // add major title to the result
 
         cellLabelAlignment = TextAlignment.CENTER;
+         labelAlignment = Pos.CENTER;
         StackPane majorCell = createCell(majorString,
                 displayCellFont,
                 displayCellStroke,
@@ -531,6 +603,7 @@ public class ResultImageBuilder {
         addChild(table, addChild(new HBox(), majorCell));
 
         cellLabelAlignment = TextAlignment.LEFT;
+        labelAlignment = Pos.CENTER_LEFT;
         // iterating and adding cells, the cells will still be added even if there is,
         // no value provided for the corresponding subject in a term
         for (int i : majorSubCodes) {
@@ -582,6 +655,8 @@ public class ResultImageBuilder {
 
         // add minor title to the result
         if (minorSubCodes.size() != 0) {
+                     labelAlignment = Pos.CENTER;
+
             cellLabelAlignment = TextAlignment.CENTER;
             StackPane minorCell = createCell(minorString,
                     displayCellFont,
@@ -594,6 +669,7 @@ public class ResultImageBuilder {
 
         }
 
+         labelAlignment = Pos.CENTER_LEFT;
         cellLabelAlignment = TextAlignment.LEFT;
 
         for (int i : minorSubCodes) {
@@ -843,11 +919,12 @@ public class ResultImageBuilder {
     // pane)
 
     private TextAlignment cellLabelAlignment = TextAlignment.LEFT;
+    private Pos labelAlignment = Pos.CENTER_LEFT;
 
     public StackPane createCell(String text, Font font, int stroke, int rectHeight, int rectLength, int labelLength) {
         Label label = new Label();
         label.setText(text);
-        label.setAlignment(Pos.CENTER); // Align label to the left
+        label.setAlignment(labelAlignment); // Align label to the left
         label.setFont(font);
 
         if (labelLength > 0) {
