@@ -166,7 +166,9 @@ public class Master extends Application {
     @Override
     public void start(Stage arg0) throws Exception {
         int[] selectedTerms = { 1, 0, 0 };
-        makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null);
+        makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null,200);
+       
+       
 
     }
 
@@ -176,6 +178,39 @@ public class Master extends Application {
             float value = entry.getValue();
             System.out.println("Key: " + key + ", Value: " + value);
         }
+    }
+
+    public static int getDaysAbsentForPin(int pin) {
+        String query = "SELECT days_absent FROM attendance WHERE pin = ?";
+
+        try (PreparedStatement preparedStatement = databridge.getConnection().prepareStatement(query)) {
+            preparedStatement.setInt(1, pin);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("days_absent");
+                } else {
+                    // Handle the case where the pin is not found
+                    return -1; // Or any other appropriate value
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // Handle the exception appropriately based on your application's needs
+            return -1; // Or any other appropriate value
+        }
+    }
+    // enters the attendance for pin, if it is already present it updates the value
+    // for that pin
+
+    public static void enterAttendance(int pin, int daysAbsent) {
+
+        String query = "INSERT INTO attendance (pin, days_absent)" +
+                "VALUES (" + pin + ", " + daysAbsent + ")" +
+                "ON CONFLICT (pin)" +
+                "DO UPDATE SET days_absent = EXCLUDED.days_absent;";
+
+        databridge.executeQuery(query);
+
     }
 
     public static void printResultSet(ResultSet resultSet) {
@@ -208,7 +243,8 @@ public class Master extends Application {
         Connection connection = databridge.getConnection();
 
         // Step 2: Specify the tables you want to print
-        String[] tablesToPrint = { "students", "subjects", "term_data", "grade_subject_list", "conditions" };
+        String[] tablesToPrint = { "students", "subjects", "term_data", "grade_subject_list", "conditions",
+                "attendance" };
 
         for (String tableName : tablesToPrint) {
             System.out.println("Table: " + tableName);
@@ -663,8 +699,6 @@ public class Master extends Application {
 
     }
 
-    
-
     public static void deleteGradeSubjectList(int grade) {
 
         String query = " DELETE FROM grade_subject_list WHERE grade = " + grade + ";";
@@ -779,7 +813,7 @@ public class Master extends Application {
     // stores in use term data
     private static ArrayList<String> termData = new ArrayList<>();
 
-    public static void makeResult(String grade, String title, int[] selectedTerms, float[] averagerValues)
+    public static void makeResult(String grade, String title, int[] selectedTerms, float[] averagerValues, int outOf)
             throws SQLException {
 
         ArrayList<Integer> pins = retrievePinsByGrade(grade);
@@ -814,8 +848,14 @@ public class Master extends Application {
             // setting the subjects of the student by averaging the terms if required
             student = setAverageSubject(student, gradeSubjectList, averagerValues);
 
+            // attendance percentage
+            int daysAbsent = getDaysAbsentForPin(i);
+            
+            double attendance =100.00-(( ((double)daysAbsent / (double)outOf))*100.00) ;
+            
+
             // store file and store in created folder
-            Result.createResultImageFile(student, title, condition, gradeSubjectList, subjects, percentage);
+            Result.createResultImageFile(student, title, condition, gradeSubjectList, subjects, percentage, attendance);
 
             // term data needs to be cleared after every sub operation for next use
             termData.clear();

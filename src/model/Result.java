@@ -170,7 +170,7 @@ public class Result {
 
     public static void createResultImageFile(Student student, String title, Condition condition,
             HashMap<Integer, SubjectSignificance> subjectList, HashMap<Integer, String> subjects,
-            HashMap<Integer, Float> percentage) {
+            HashMap<Integer, Float> percentage, double attendance) {
 
         // this function is called first as it sets the value of the MAJOR,MINOR,
         // EVALUATION
@@ -235,7 +235,7 @@ public class Result {
 
         VBox STable = rib.createSubjectTable();
         // the code for attendance is missing
-        VBox passStatusBox = rib.createPassStatusBox(hasPassed, percentage, student.getPin(), -1);
+        VBox passStatusBox = rib.createPassStatusBox(hasPassed, percentage, student.getPin(), (float)attendance);
         PETable.getChildren().add(passStatusBox);
 
         // the below code is actually meant to done in ResultImageBuilder
