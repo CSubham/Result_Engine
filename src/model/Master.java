@@ -166,9 +166,7 @@ public class Master extends Application {
     @Override
     public void start(Stage arg0) throws Exception {
         int[] selectedTerms = { 1, 0, 0 };
-        makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null,200);
-       
-       
+        makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null, 200);
 
     }
 
@@ -660,6 +658,13 @@ public class Master extends Application {
 
     }
 
+    // pointer points to another column
+    public static void enterGradeSubjectList(int grade, int pointer) {
+        databridge.executeQuery(
+                "INSERT INTO grade_subject_list (grade, subject_list) VALUES ( " + grade + ",'" + pointer
+                        + "');");
+    }
+
     public static void updateGradeSubjectList(int grade, HashMap<Integer, SubjectSignificance> subjects) {
         model.Subject subject = new model.Subject();
         String subjectString = subject.generateSubjectList(subjects);
@@ -695,6 +700,13 @@ public class Master extends Application {
         }
 
         Subject subject = new Subject();
+        // it probably implies that it is a pointer pointing to another column because
+        // pointers are integers stored as strings whose max value is 36
+        try {
+            if (gradeSubjectList.length() < 5)
+                return getGradeSubjectList(Integer.parseInt(gradeSubjectList));
+        } catch (Exception e) {
+        }
         return subject.subjectListToHashMap(gradeSubjectList);
 
     }
@@ -850,9 +862,8 @@ public class Master extends Application {
 
             // attendance percentage
             int daysAbsent = getDaysAbsentForPin(i);
-            
-            double attendance =100.00-(( ((double)daysAbsent / (double)outOf))*100.00) ;
-            
+
+            double attendance = 100.00 - ((((double) daysAbsent / (double) outOf)) * 100.00);
 
             // store file and store in created folder
             Result.createResultImageFile(student, title, condition, gradeSubjectList, subjects, percentage, attendance);
@@ -1060,7 +1071,7 @@ public class Master extends Application {
         for (int number : list) {
 
             sum += subjects.get(number);
-            ;
+            
             divFact++;
         }
 
