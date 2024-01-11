@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import javax.imageio.ImageIO;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -25,8 +23,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
 public class ResultImageBuilder {
-
-   
 
     // public static void main(String[] args) {
     // launch(args);
@@ -469,6 +465,8 @@ public class ResultImageBuilder {
 
     }
 
+    
+
     private static String getDiv(float percentage) {
         if (percentage >= 81 && percentage <= 100) {
             return "DISTINCTION DIV";
@@ -585,7 +583,7 @@ public class ResultImageBuilder {
         // add major title to the result
 
         cellLabelAlignment = TextAlignment.CENTER;
-         labelAlignment = Pos.CENTER;
+        labelAlignment = Pos.CENTER;
         StackPane majorCell = createCell(majorString,
                 displayCellFont,
                 displayCellStroke,
@@ -646,75 +644,74 @@ public class ResultImageBuilder {
 
         }
 
-        if(!isPrimary){
-        // add minor title to the result
-        if (minorSubCodes.size() != 0) {
-                     labelAlignment = Pos.CENTER;
+        if (!isPrimary) {
+            // add minor title to the result
+            if (minorSubCodes.size() != 0) {
+                labelAlignment = Pos.CENTER;
 
-            cellLabelAlignment = TextAlignment.CENTER;
-            StackPane minorCell = createCell(minorString,
-                    displayCellFont,
-                    displayCellStroke,
-                    displayCellRectHeight,
-                    displayCellRectLength,
-                    displayCellLabelLength);
+                cellLabelAlignment = TextAlignment.CENTER;
+                StackPane minorCell = createCell(minorString,
+                        displayCellFont,
+                        displayCellStroke,
+                        displayCellRectHeight,
+                        displayCellRectLength,
+                        displayCellLabelLength);
 
-            addChild(table, addChild(new HBox(), minorCell));
-
-        }
-
-         labelAlignment = Pos.CENTER_LEFT;
-        cellLabelAlignment = TextAlignment.LEFT;
-
-        for (int i : minorSubCodes) {
-
-            int key = i;
-
-            // confirming if it is added or not
-
-            if (addedSubjectCodes.contains(key) == true)
-                continue;
-
-            // checking whether the key is part of any compound subject
-
-            ArrayList<Integer> compoundSubject = findArrayList(averageSubjectsSignifier, key);
-            if (compoundSubject != null) {
-                HBox compoundRow = createCompoundSubjectRow(compoundSubject);
-                addChild(table, compoundRow);
-                continue;
+                addChild(table, addChild(new HBox(), minorCell));
 
             }
 
-            // get the values
+            labelAlignment = Pos.CENTER_LEFT;
+            cellLabelAlignment = TextAlignment.LEFT;
 
-            // subject name
-            String subjectName = subjects.get(key);
+            for (int i : minorSubCodes) {
 
-            // term one value
-            int marksOne = getMarksOne(key);
+                int key = i;
 
-            // term two value
-            int marksTwo = getMarksTwo(key);
+                // confirming if it is added or not
 
-            // term three value
+                if (addedSubjectCodes.contains(key) == true)
+                    continue;
 
-            int marksThree = getMarksThree(key);
+                // checking whether the key is part of any compound subject
 
-            HBox row = createSTRow(subjectName, marksOne, marksTwo, marksThree);
-            int avg = -1;
-            if (averagedSubjectsValue != null) {
-                averagedSubjectsValue.get(key);
+                ArrayList<Integer> compoundSubject = findArrayList(averageSubjectsSignifier, key);
+                if (compoundSubject != null) {
+                    HBox compoundRow = createCompoundSubjectRow(compoundSubject);
+                    addChild(table, compoundRow);
+                    continue;
+
+                }
+
+                // get the values
+
+                // subject name
+                String subjectName = subjects.get(key);
+
+                // term one value
+                int marksOne = getMarksOne(key);
+
+                // term two value
+                int marksTwo = getMarksTwo(key);
+
+                // term three value
+
+                int marksThree = getMarksThree(key);
+
+                HBox row = createSTRow(subjectName, marksOne, marksTwo, marksThree);
+                int avg = -1;
+                if (averagedSubjectsValue != null) {
+                    averagedSubjectsValue.get(key);
+                }
+                row = addColToRow(row, avg);
+
+                addChild(table, row);
+
             }
-            row = addColToRow(row, avg);
-
-            addChild(table, row);
-
         }
-    }
 
         return table;
     }
-    
 
     private HBox createCompoundSubjectRow(ArrayList<Integer> compoundSubject) {
 
@@ -801,7 +798,7 @@ public class ResultImageBuilder {
 
         int sum = 0;
         for (int number : list) {
-            sum += number;
+            sum += averagedSubjectsValue.get(number);
         }
 
         return sum / list.size(); // Calculate and return the average
@@ -1018,14 +1015,5 @@ public class ResultImageBuilder {
         return keysArray;
     }
 
-    private static int[] getValuesArray(HashMap<Integer, Integer> hashMap) {
-        int[] valuesArray = new int[hashMap.size()];
-        int index = 0;
-        for (Integer value : hashMap.values()) {
-            valuesArray[index] = value;
-            index++;
-        }
-        return valuesArray;
-    }
-
+    
 }
