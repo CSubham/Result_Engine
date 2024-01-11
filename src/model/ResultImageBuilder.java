@@ -24,33 +24,6 @@ import javafx.scene.text.TextAlignment;
 
 public class ResultImageBuilder {
 
-    // public static void main(String[] args) {
-    // launch(args);
-    // }
-
-    // @Override
-    // public void start(Stage stage) throws Exception {
-    // HashMap<Integer, SubjectSignificance> gradeSubjectList = new HashMap<>();
-    // gradeSubjectList.put(01, SubjectSignificance.EVALUATION);
-    // gradeSubjectList.put(02, SubjectSignificance.EVALUATION);
-
-    // HashMap<Integer, String> subjects = new HashMap<>();
-    // subjects.put(01, "SomeSubject");
-    // subjects.put(02, "Some");
-
-    // HashMap<Integer, Integer> marks = new HashMap<>();
-    // marks.put(01, 45);
-    // marks.put(02, 45);
-
-    // Scene scene = new Scene(createPETable(marks, null, null, subjects));
-    // captureAndSaveVBoxImage((VBox) scene.getRoot(), "image.png");
-
-    // stage.setScene(scene);
-    // stage.show();
-    // stage.setResizable(true);
-
-    // }
-
     /* prior function call variables */
 
     // the variables here need to be set everytime for create subject table or
@@ -172,7 +145,7 @@ public class ResultImageBuilder {
 
         // term one marks
         if (marksOne != -1) {
-            StackPane termOneCell = createCell(addLeadingZero(marksOne),
+            StackPane termOneCell = createCell(getEvaluationGrade(marksOne),
                     marksFontPE,
                     cellStrokePE,
                     marksRectHeightPE,
@@ -191,7 +164,7 @@ public class ResultImageBuilder {
         // term two marks
 
         if (marksTwo != -1) {
-            StackPane termTwoCell = createCell(addLeadingZero(marksTwo),
+            StackPane termTwoCell = createCell(getEvaluationGrade(marksTwo),
                     marksFontPE,
                     cellStrokePE,
                     marksRectHeightPE,
@@ -210,7 +183,7 @@ public class ResultImageBuilder {
         // term three cell
 
         if (marksThree != -1) {
-            StackPane termThreeCell = createCell(addLeadingZero(marksThree),
+            StackPane termThreeCell = createCell(getEvaluationGrade(marksThree),
                     marksFontPE,
                     cellStrokePE,
                     marksRectHeightPE,
@@ -228,6 +201,12 @@ public class ResultImageBuilder {
 
         return row;
 
+    }
+
+    // Incomplete functions
+
+    private String getEvaluationGrade(int n) {
+        return n + "";
     }
 
     private HBox createSTRow(String value, int marksOne, int marksTwo, int marksThree) {
@@ -465,8 +444,6 @@ public class ResultImageBuilder {
 
     }
 
-    
-
     private static String getDiv(float percentage) {
         if (percentage >= 81 && percentage <= 100) {
             return "DISTINCTION DIV";
@@ -632,9 +609,22 @@ public class ResultImageBuilder {
 
             int marksThree = getMarksThree(key);
 
+            // this variable holds the number of term data given for the current calculation
+            int numOfTerms = 0;
+            if (marksOne != -1)
+                numOfTerms++;
+            if (marksTwo != -1)
+                numOfTerms++;
+            if (marksThree != -1)
+                numOfTerms++;
+
             HBox row = createSTRow(subjectName, marksOne, marksTwo, marksThree);
 
             int avg = -1;
+            if (numOfTerms > 1) {
+                avg = averagedSubjectsValue.get(key);
+            }
+
             if (averagedSubjectsValue != null) {
                 averagedSubjectsValue.get(key);
             }
@@ -699,7 +689,20 @@ public class ResultImageBuilder {
                 int marksThree = getMarksThree(key);
 
                 HBox row = createSTRow(subjectName, marksOne, marksTwo, marksThree);
+
+                int numOfTerms = 0;
+                if (marksOne != -1)
+                    numOfTerms++;
+                if (marksTwo != -1)
+                    numOfTerms++;
+                if (marksThree != -1)
+                    numOfTerms++;
+
                 int avg = -1;
+                if (numOfTerms > 1) {
+                    avg = averagedSubjectsValue.get(key);
+                }
+
                 if (averagedSubjectsValue != null) {
                     averagedSubjectsValue.get(key);
                 }
@@ -806,6 +809,14 @@ public class ResultImageBuilder {
 
     private HBox addColToCompoundRow(VBox compoundRow, int average, int multiplyFactor) {
 
+        String gradeOnAverage = "";
+        if(average != -1){
+
+          gradeOnAverage = ""+ calculateGradeOnAverage(average);
+
+
+        }
+
         HBox row = new HBox();
         row.getChildren().add(compoundRow);
 
@@ -816,7 +827,7 @@ public class ResultImageBuilder {
                 avgCellRectLength,
                 marksLabelLengthST);
 
-        StackPane gov = createCell(addLeadingZero(calculateGrade(average)),
+        StackPane gov = createCell(gradeOnAverage,
                 marksFontST,
                 cellStrokeST,
                 govCellRectHeight * multiplyFactor,
@@ -830,7 +841,14 @@ public class ResultImageBuilder {
     }
 
     private HBox addColToRow(HBox row, int average) {
+        
+        String gradeOnAverage = "";
+        if(average != -1){
 
+          gradeOnAverage = ""+ calculateGradeOnAverage(average);
+
+
+        }
         StackPane avg = createCell(addLeadingZero(average),
                 marksFontST,
                 cellStrokeST,
@@ -838,7 +856,7 @@ public class ResultImageBuilder {
                 avgCellRectLength,
                 marksLabelLengthST);
 
-        StackPane gov = createCell(addLeadingZero(calculateGrade(average)),
+        StackPane gov = createCell(gradeOnAverage,
                 marksFontST,
                 cellStrokeST,
                 govCellRectHeight,
@@ -852,7 +870,7 @@ public class ResultImageBuilder {
     }
 
     // INCOMPLETE
-    private int calculateGrade(int value) {
+    private int calculateGradeOnAverage(int value) {
 
         return value;
     }
@@ -1015,5 +1033,4 @@ public class ResultImageBuilder {
         return keysArray;
     }
 
-    
 }
