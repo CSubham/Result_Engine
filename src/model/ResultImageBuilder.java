@@ -26,14 +26,7 @@ import javafx.scene.text.TextAlignment;
 
 public class ResultImageBuilder {
 
-    @FXML
-    private HBox title;
-    @FXML
-    private HBox rollNo;
-    @FXML
-    private HBox grade;
-    @FXML
-    private HBox name;
+   
 
     // public static void main(String[] args) {
     // launch(args);

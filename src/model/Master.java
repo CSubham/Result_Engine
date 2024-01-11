@@ -952,9 +952,9 @@ public class Master extends Application {
 
     }
 
-    private static void makeResult(int pin, String title, int[] selectedTerms, float[] averagerValues) {
+    // private static void makeResult(int pin, String title, int[] selectedTerms, float[] averagerValues) {
 
-    }
+    // }
 
     // the percentage for every student is calculated and stored and then sorted to
     // estimate rank
