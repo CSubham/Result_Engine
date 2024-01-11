@@ -576,7 +576,7 @@ public class ResultImageBuilder {
         return usableKeys;
     }
 
-    public VBox createSubjectTable() {
+    public VBox createSubjectTable(boolean isPrimary) {
 
         VBox table = new VBox();
         HBox displayRow = getDisplayRow(displayRowST);
@@ -646,6 +646,7 @@ public class ResultImageBuilder {
 
         }
 
+        if(!isPrimary){
         // add minor title to the result
         if (minorSubCodes.size() != 0) {
                      labelAlignment = Pos.CENTER;
@@ -709,9 +710,11 @@ public class ResultImageBuilder {
             addChild(table, row);
 
         }
+    }
 
         return table;
     }
+    
 
     private HBox createCompoundSubjectRow(ArrayList<Integer> compoundSubject) {
 

@@ -170,7 +170,7 @@ public class Result {
 
     public static void createResultImageFile(Student student, String title, Condition condition,
             HashMap<Integer, SubjectSignificance> subjectList, HashMap<Integer, String> subjects,
-            HashMap<Integer, Float> percentage, double attendance,String saveLocation) {
+            HashMap<Integer, Float> percentage, double attendance, String saveLocation) {
 
         // this function is called first as it sets the value of the MAJOR,MINOR,
         // EVALUATION
@@ -184,18 +184,21 @@ public class Result {
         // to store marks of terms, in case a term is null, blank cells are printed
         // evaluation subjects stored in term one,two,three
 
+        // if is primary then the evaluation subjects will also contain minor subjects
+        boolean isPrimary = (Subject.gradeStringToInteger(student.getGrade()) <= 15) ? true : false;
+
         try {
-            termOne = getEvaluationSubjects(tString.convertToHashMap(student.getTermOne()), subjectList);
+            termOne = getEvaluationSubjects(tString.convertToHashMap(student.getTermOne()), subjectList,isPrimary);
 
         } catch (Exception e) {
         }
         try {
-            termTwo = getEvaluationSubjects(tString.convertToHashMap(student.getTermTwo()), subjectList);
+            termTwo = getEvaluationSubjects(tString.convertToHashMap(student.getTermTwo()), subjectList,isPrimary);
 
         } catch (Exception e) {
         }
         try {
-            termThree = getEvaluationSubjects(tString.convertToHashMap(student.getTermThree()), subjectList);
+            termThree = getEvaluationSubjects(tString.convertToHashMap(student.getTermThree()), subjectList,isPrimary);
 
         } catch (Exception e) {
         }
@@ -212,10 +215,12 @@ public class Result {
         rib.setMajorSubCodes(convertKeysToArrayList(major));
         rib.setMinorSubCodes(convertKeysToArrayList(minor));
 
+      
+
         // set term values for petable
-        rib.setTermOne(getEvaluationSubjects(termOne, subjectList));
-        rib.setTermTwo(getEvaluationSubjects(termTwo, subjectList));
-        rib.setTermThree(getEvaluationSubjects(termThree, subjectList));
+        rib.setTermOne(getEvaluationSubjects(termOne, subjectList,isPrimary));
+        rib.setTermTwo(getEvaluationSubjects(termTwo, subjectList,isPrimary));
+        rib.setTermThree(getEvaluationSubjects(termThree, subjectList,isPrimary));
 
         VBox PETable = rib.createPETable();
 
@@ -233,9 +238,9 @@ public class Result {
         rib.setTermTwo(termTwo);
         rib.setTermThree(termThree);
 
-        VBox STable = rib.createSubjectTable();
+        VBox STable = rib.createSubjectTable(isPrimary);
         // the code for attendance is missing
-        VBox passStatusBox = rib.createPassStatusBox(hasPassed, percentage, student.getPin(), (float)attendance);
+        VBox passStatusBox = rib.createPassStatusBox(hasPassed, percentage, student.getPin(), (float) attendance);
         PETable.getChildren().add(passStatusBox);
 
         // the below code is actually meant to done in ResultImageBuilder
@@ -252,7 +257,7 @@ public class Result {
         result.getChildren().add(remarksRow);
         Scene scene = new Scene(result);
 
-        ResultImageBuilder.captureAndSaveVBoxImage((VBox) scene.getRoot(),saveLocation+student.getName() + ".png");
+        ResultImageBuilder.captureAndSaveVBoxImage((VBox) scene.getRoot(), saveLocation + student.getName() + ".png");
 
     }
 
@@ -326,7 +331,7 @@ public class Result {
     }
 
     private static HashMap<Integer, Integer> getEvaluationSubjects(HashMap<Integer, Integer> subjects,
-            HashMap<Integer, SubjectSignificance> subjectList) {
+            HashMap<Integer, SubjectSignificance> subjectList, boolean isPrimary) {
 
         if (subjects == null)
             return null;
@@ -349,6 +354,27 @@ public class Result {
                 default: {
                     break;
                 }
+            }
+
+        }
+
+        if (isPrimary) {
+            for (int i = 0; i < keysArray.length; i++) {
+                int key = keysArray[i];
+
+                SubjectSignificance significance = subjectList.get(key);
+
+                switch (significance) {
+
+                    case MINOR: {
+                        evaluationSubjects.put(key, valuesArray[i]);
+                        break;
+                    }
+                    default: {
+                        break;
+                    }
+                }
+
             }
 
         }
