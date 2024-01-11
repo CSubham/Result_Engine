@@ -13,13 +13,18 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 public class ResultImageBuilder {
@@ -386,6 +391,9 @@ public class ResultImageBuilder {
 
     }
 
+    
+    
+
     public VBox createPassStatusBox(boolean hasPassed, HashMap<Integer, Float> percentage, int pin, float attendance) {
 
         // passed or fail
@@ -408,40 +416,64 @@ public class ResultImageBuilder {
         String percentageOfMarks = "PERCENTAGE OF MARKS : " + percentage.get(pin) + "%";
         StackPane percentageLabel = createCell(percentageOfMarks, font, 0, subjectNameRectHeightPE, -1, -1);
 
-        // divison
-        String divison = "DIVISON : ";
-        if (hasPassed) {
-            divison += getDiv(percentage.get(pin));
-        }
-        StackPane divisonLabel = createCell(divison, font, 0, subjectNameRectHeightPE, -1, -1);
-
-        // attendance
-        String present = "ATTENDANCE : " + attendance + "%";
-        StackPane presentLabel = createCell(present, font, 0, subjectNameRectHeightPE, -1, -1);
-
         HBox resultRow = new HBox();
         addChild(resultRow, resultLabel);
         HBox positionRow = new HBox();
         addChild(positionRow, positionLabel);
         HBox percentageRow = new HBox();
         addChild(percentageRow, percentageLabel);
-        HBox divisonRow = new HBox();
-        addChild(divisonRow, divisonLabel);
-        HBox presentRow = new HBox();
-        addChild(presentRow, presentLabel);
 
         VBox rowHolder = new VBox();
         addChild(rowHolder, resultRow);
         addChild(rowHolder, positionRow);
         addChild(rowHolder, percentageRow);
-        addChild(rowHolder, divisonRow);
-        addChild(rowHolder, presentRow);
 
         StackPane statusBox = addRectangleOverVBox(rowHolder, (double) 585, (double) 200, 3);
         VBox rectStatusBox = new VBox();
         rectStatusBox.getChildren().add(statusBox);
         return rectStatusBox;
 
+    }
+
+    // div and attendance box
+    public VBox createAttendanceAndDivBox(boolean hasPassed, HashMap<Integer, Float> percentage, int pin,
+            float attendance) {
+
+        labelAlignment = Pos.CENTER_RIGHT;
+        cellLabelAlignment = TextAlignment.RIGHT;
+        Font font = new Font("Arial", 30);
+
+        // divison
+        String divison = "DIVISON : ";
+        if (hasPassed) {
+            divison += getDiv(percentage.get(pin)) + "    ";
+        }
+        StackPane divisonLabel = createCell(divison, font, 0, subjectNameRectHeightPE, displayCellRectLength,
+                displayCellRectLength);
+
+        // attendance
+        String present = "ATTENDANCE : " + attendance + "%" + "    ";
+        StackPane presentLabel = createCell(present, font, 0, subjectNameRectHeightPE, displayCellRectLength,
+                displayCellRectLength);
+
+        HBox divisonRow = new HBox();
+        addChild(divisonRow, divisonLabel);
+        HBox presentRow = new HBox();
+        addChild(presentRow, presentLabel);
+
+        VBox rowHolder = new VBox();
+
+        addChild(rowHolder, divisonRow);
+        addChild(rowHolder, presentRow);
+
+        StackPane attenDivBox = addRectangleOverVBox(rowHolder, (double) displayCellRectLength, (double) 100, 3);
+        VBox rectADBox = new VBox();
+        rectADBox.getChildren().add(attenDivBox);
+
+        cellLabelAlignment = TextAlignment.LEFT;
+        labelAlignment = Pos.CENTER_LEFT;
+
+        return rectADBox;
     }
 
     private static String getDiv(float percentage) {
@@ -810,10 +842,9 @@ public class ResultImageBuilder {
     private HBox addColToCompoundRow(VBox compoundRow, int average, int multiplyFactor) {
 
         String gradeOnAverage = "";
-        if(average != -1){
+        if (average != -1) {
 
-          gradeOnAverage = ""+ calculateGradeOnAverage(average);
-
+            gradeOnAverage = "" + calculateGradeOnAverage(average);
 
         }
 
@@ -841,12 +872,11 @@ public class ResultImageBuilder {
     }
 
     private HBox addColToRow(HBox row, int average) {
-        
+
         String gradeOnAverage = "";
-        if(average != -1){
+        if (average != -1) {
 
-          gradeOnAverage = ""+ calculateGradeOnAverage(average);
-
+            gradeOnAverage = "" + calculateGradeOnAverage(average);
 
         }
         StackPane avg = createCell(addLeadingZero(average),

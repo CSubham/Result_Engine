@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import model.Condition_blocks.Compulsory;
@@ -188,17 +189,17 @@ public class Result {
         boolean isPrimary = (Subject.gradeStringToInteger(student.getGrade()) <= 15) ? true : false;
 
         try {
-            termOne = getEvaluationSubjects(tString.convertToHashMap(student.getTermOne()), subjectList,isPrimary);
+            termOne = getEvaluationSubjects(tString.convertToHashMap(student.getTermOne()), subjectList, isPrimary);
 
         } catch (Exception e) {
         }
         try {
-            termTwo = getEvaluationSubjects(tString.convertToHashMap(student.getTermTwo()), subjectList,isPrimary);
+            termTwo = getEvaluationSubjects(tString.convertToHashMap(student.getTermTwo()), subjectList, isPrimary);
 
         } catch (Exception e) {
         }
         try {
-            termThree = getEvaluationSubjects(tString.convertToHashMap(student.getTermThree()), subjectList,isPrimary);
+            termThree = getEvaluationSubjects(tString.convertToHashMap(student.getTermThree()), subjectList, isPrimary);
 
         } catch (Exception e) {
         }
@@ -215,12 +216,10 @@ public class Result {
         rib.setMajorSubCodes(convertKeysToArrayList(major));
         rib.setMinorSubCodes(convertKeysToArrayList(minor));
 
-      
-
         // set term values for petable
-        rib.setTermOne(getEvaluationSubjects(termOne, subjectList,isPrimary));
-        rib.setTermTwo(getEvaluationSubjects(termTwo, subjectList,isPrimary));
-        rib.setTermThree(getEvaluationSubjects(termThree, subjectList,isPrimary));
+        rib.setTermOne(getEvaluationSubjects(termOne, subjectList, isPrimary));
+        rib.setTermTwo(getEvaluationSubjects(termTwo, subjectList, isPrimary));
+        rib.setTermThree(getEvaluationSubjects(termThree, subjectList, isPrimary));
 
         VBox PETable = rib.createPETable();
 
@@ -238,7 +237,10 @@ public class Result {
         rib.setTermTwo(termTwo);
         rib.setTermThree(termThree);
 
+        // STable and attention and division box
         VBox STable = rib.createSubjectTable(isPrimary);
+        STable.getChildren()
+                .add(rib.createAttendanceAndDivBox(hasPassed, percentage, student.getPin(), (float) attendance));
         // the code for attendance is missing
         VBox passStatusBox = rib.createPassStatusBox(hasPassed, percentage, student.getPin(), (float) attendance);
         PETable.getChildren().add(passStatusBox);
