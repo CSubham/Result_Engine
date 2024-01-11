@@ -166,7 +166,7 @@ public class Master extends Application {
     @Override
     public void start(Stage arg0) throws Exception {
         int[] selectedTerms = { 1, 0, 0 };
-        makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null, 200);
+        makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null, 200,"/home/chilli_pie/");
 
     }
 
@@ -825,8 +825,16 @@ public class Master extends Application {
     // stores in use term data
     private static ArrayList<String> termData = new ArrayList<>();
 
-    public static void makeResult(String grade, String title, int[] selectedTerms, float[] averagerValues, int outOf)
+    // the provided string path here creates a folder at that destination and saves
+    // the images at that destination
+    public static void makeResult(String grade, String title, int[] selectedTerms, float[] averagerValues, int outOf,
+            String path)
             throws SQLException {
+
+        // creating grade dir at that file path , and it returns a saveLocation where we
+        // can genrated image files for that specific grade
+
+        String saveLocation = Printer.createDirAt(path, grade.toUpperCase())+"/";
 
         ArrayList<Integer> pins = retrievePinsByGrade(grade);
 
@@ -866,7 +874,7 @@ public class Master extends Application {
             double attendance = 100.00 - ((((double) daysAbsent / (double) outOf)) * 100.00);
 
             // store file and store in created folder
-            Result.createResultImageFile(student, title, condition, gradeSubjectList, subjects, percentage, attendance);
+            Result.createResultImageFile(student, title, condition, gradeSubjectList, subjects, percentage, attendance,saveLocation);
 
             // term data needs to be cleared after every sub operation for next use
             termData.clear();
@@ -875,6 +883,7 @@ public class Master extends Application {
 
     }
 
+   
     private static Student setAverageSubject(Student student, HashMap<Integer, SubjectSignificance> gradeSubjectList,
             float[] averagerValues) {
         AdvancedTermAverager advancedTermAverager = new AdvancedTermAverager();
@@ -952,7 +961,8 @@ public class Master extends Application {
 
     }
 
-    // private static void makeResult(int pin, String title, int[] selectedTerms, float[] averagerValues) {
+    // private static void makeResult(int pin, String title, int[] selectedTerms,
+    // float[] averagerValues) {
 
     // }
 
@@ -1071,7 +1081,7 @@ public class Master extends Application {
         for (int number : list) {
 
             sum += subjects.get(number);
-            
+
             divFact++;
         }
 

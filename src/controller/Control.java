@@ -79,9 +79,9 @@ public class Control {
     }
 
     // make the results of provided grade (Class,section)
-    public static void makeResult(String grade, String title, int[] selectedTerms, float[] averagerValues)
+    public static void makeResult(String grade, String title, int[] selectedTerms, float[] averagerValues,int outOf,String path)
             throws SQLException {
-        Master.makeResult(grade, title, selectedTerms, averagerValues);
+        Master.makeResult(grade, title, selectedTerms,averagerValues,outOf,path);
     }
 
     // Adding a new student to the database

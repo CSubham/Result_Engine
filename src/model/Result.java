@@ -170,7 +170,7 @@ public class Result {
 
     public static void createResultImageFile(Student student, String title, Condition condition,
             HashMap<Integer, SubjectSignificance> subjectList, HashMap<Integer, String> subjects,
-            HashMap<Integer, Float> percentage, double attendance) {
+            HashMap<Integer, Float> percentage, double attendance,String saveLocation) {
 
         // this function is called first as it sets the value of the MAJOR,MINOR,
         // EVALUATION
@@ -252,7 +252,7 @@ public class Result {
         result.getChildren().add(remarksRow);
         Scene scene = new Scene(result);
 
-        ResultImageBuilder.captureAndSaveVBoxImage((VBox) scene.getRoot(), student.getName() + ".png");
+        ResultImageBuilder.captureAndSaveVBoxImage((VBox) scene.getRoot(),saveLocation+student.getName() + ".png");
 
     }
 
