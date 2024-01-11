@@ -1,8 +1,8 @@
 package model;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
 import javax.print.Doc;
 import javax.print.DocFlavor;
 import javax.print.DocPrintJob;
@@ -19,7 +19,7 @@ public class Printer {
 
     // this function takes a string path leading to an image and then looks for
     // connected printers and prints 1 copy
-    
+
     public static void printImage(String imagePath) {
         try {
             // Create a PrintService
@@ -55,6 +55,20 @@ public class Printer {
             System.out.println("No default print service found.");
             return null;
         }
+    }
+
+    // potential bug, if the path is ending with / need not add /dirName
+    public static void createDirAt(String path, String dirName) {
+        
+        File file = new File(path + dirName);
+
+        boolean dirCreated = file.mkdir();
+        if (dirCreated) {
+            System.out.println(dirName + " has been created");
+        } else {
+            System.out.println("Failed to create directory " + dirName);
+        }
+
     }
 
 }
