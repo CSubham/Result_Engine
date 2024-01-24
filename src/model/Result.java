@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -259,9 +260,10 @@ public class Result {
         result.getChildren().add(remarksRow);
         Scene scene = new Scene(result);
 
-        ResultImageBuilder.captureAndSaveVBoxImage((VBox) scene.getRoot(), saveLocation + student.getName() + ".png");
-
+        ResultImageBuilder.captureAndSaveVBoxImage((VBox) scene.getRoot(), saveLocation +"/"+ student.getName() + ".png");
+  
     }
+
 
     private static void setLanguagesTermOne(String str) {
 

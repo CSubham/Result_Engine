@@ -1,0 +1,46 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Control",
+            "request": "launch",
+            "mainClass": "controller.Control",
+            "projectName": "Result_Engine_4386b0b1",
+            "vmArgs": "--module-path \"C:/Users/Subham Rai/Workspace/openjfx-21.0.2_windows-x64_bin-sdk/javafx-sdk-21.0.2/lib\" --add-modules javafx.controls,javafx.fxml"
+
+        },
+        {
+            "type": "java",
+            "name": "Master",
+            "request": "launch",
+            "mainClass": "model.Master",
+            "projectName": "Result_Engine_4386b0b1",
+            "vmArgs": "--module-path \"C:/Users/Subham Rai/Workspace/openjfx-21.0.2_windows-x64_bin-sdk/javafx-sdk-21.0.2/lib\" --add-modules javafx.controls,javafx.fxml"
+
+        },
+        {
+            "type": "java",
+            "name": "TestZone",
+            "request": "launch",
+            "mainClass": "model.TestZone",
+            "projectName": "Result_Engine_4386b0b1"
+        },
+        {
+            "type": "java",
+            "name": "UIMaster",
+            "request": "launch",
+            "mainClass": "view.UIMaster",
+            "projectName": "Result_Engine_4386b0b1"
+        }
+    ]
+}

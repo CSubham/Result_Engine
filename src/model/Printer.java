@@ -59,13 +59,13 @@ public class Printer {
 
     // potential bug, if the path is ending with / need not add /dirName
     public static String createDirAt(String path, String dirName) {
-
-        File file = new File(path + dirName);
+System.out.println("reached");
+        File file = new File(path +"//"+ dirName);
         
         boolean dirCreated = file.mkdir();
         if (dirCreated) {
             System.out.println(dirName + " has been created");
-            return path+dirName;
+            return path +"\\"+ dirName;
         } else {
             System.out.println("Failed to create directory " + dirName);
             return null;

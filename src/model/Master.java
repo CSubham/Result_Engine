@@ -166,7 +166,7 @@ public class Master extends Application {
     @Override
     public void start(Stage arg0) throws Exception {
         int[] selectedTerms = { 1, 0, 0 };
-        makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null, 200,"/home/chilli_pie/");
+        makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null, 200,"C:\\Users\\Subham Rai\\Workspace\\Test Folder");
 
     }
 
@@ -834,7 +834,7 @@ public class Master extends Application {
         // creating grade dir at that file path , and it returns a saveLocation where we
         // can genrated image files for that specific grade
 
-        String saveLocation = Printer.createDirAt(path, grade.toUpperCase())+"/";
+        String saveLocation = Printer.createDirAt(path, grade.toUpperCase());
 
         ArrayList<Integer> pins = retrievePinsByGrade(grade);
 

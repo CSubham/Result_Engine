@@ -1,0 +1,14 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\Users\\Subham Rai\\Workspace\\postgresql-42.7.1.jar",
+        "c:\\Users\\Subham Rai\\Workspace\\openjfx-21.0.2_windows-x64_bin-sdk\\javafx-sdk-21.0.2\\lib\\javafx.base.jar",
+        "c:\\Users\\Subham Rai\\Workspace\\openjfx-21.0.2_windows-x64_bin-sdk\\javafx-sdk-21.0.2\\lib\\javafx.controls.jar",
+        "c:\\Users\\Subham Rai\\Workspace\\openjfx-21.0.2_windows-x64_bin-sdk\\javafx-sdk-21.0.2\\lib\\javafx.fxml.jar",
+        "c:\\Users\\Subham Rai\\Workspace\\openjfx-21.0.2_windows-x64_bin-sdk\\javafx-sdk-21.0.2\\lib\\javafx.graphics.jar",
+        "c:\\Users\\Subham Rai\\Workspace\\openjfx-21.0.2_windows-x64_bin-sdk\\javafx-sdk-21.0.2\\lib\\javafx.media.jar",
+        "c:\\Users\\Subham Rai\\Workspace\\openjfx-21.0.2_windows-x64_bin-sdk\\javafx-sdk-21.0.2\\lib\\javafx.swing.jar",
+        "c:\\Users\\Subham Rai\\Workspace\\openjfx-21.0.2_windows-x64_bin-sdk\\javafx-sdk-21.0.2\\lib\\javafx.web.jar",
+        "c:\\Users\\Subham Rai\\Workspace\\openjfx-21.0.2_windows-x64_bin-sdk\\javafx-sdk-21.0.2\\lib\\javafx-swt.jar"
+    ]
+}
