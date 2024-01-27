@@ -2,11 +2,20 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+
 import javafx.scene.Scene;
+import javafx.scene.effect.Blend;
+import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import model.Condition_blocks.Compulsory;
 import model.Condition_blocks.ConditionBlock;
 import model.Condition_blocks.MixedValue;
@@ -258,12 +267,125 @@ public class Result {
         // remarks row
         VBox remarksRow = rib.getRemarksBox();
         result.getChildren().add(remarksRow);
+
+       
         Scene scene = new Scene(result);
 
-        ResultImageBuilder.captureAndSaveVBoxImage((VBox) scene.getRoot(), saveLocation +"/"+ student.getName() + ".png");
-  
+
+
+
+        // ResultImageBuilder.captureAndSaveVBoxImage((VBox) scene.getRoot(),
+        // saveLocation +"/"+ student.getName() + ".png");
+
+        // an image is obtained and then overlayed
+        Image initialImg = ResultImageBuilder.captureVBoxImage((VBox) scene.getRoot());
+
+        // VBox fnl = new VBox();
+        // fnl.getChildren().addAll(new ImageView(img));
+        // Scene tsc = new Scene(fnl);
+        // ResultImageBuilder.captureAndSaveVBoxImage((VBox) tsc.getRoot(), saveLocation
+        // +"/"+ student.getName() + ".png");
+        Image finImage = removeBackgroundColor(initialImg, findMostPrevalentColor(initialImg));
+        ImageView imageView = blendImages(finImage);
+        
+        VBox fnl = new VBox();
+        fnl.getChildren().addAll(imageView);
+        Scene tsc = new Scene(fnl);
+        
+        ResultImageBuilder.captureAndSaveVBoxImage((VBox) tsc.getRoot(), saveLocation+"/"+ student.getName() + ".png");
+
+
+
     }
 
+   
+
+    public static javafx.scene.paint.Color findMostPrevalentColor(Image image) {
+        PixelReader pixelReader = image.getPixelReader();
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+
+        // Count occurrences of each color using a histogram
+        Map<Integer, Integer> colorHistogram = new HashMap<>();
+        int maxOccurrences = 0;
+        int mostPrevalentColor = 0;  // Default color (black)
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int color = pixelReader.getArgb(x, y);
+                colorHistogram.put(color, colorHistogram.getOrDefault(color, 0) + 1);
+
+                // Update most prevalent color
+                if (colorHistogram.get(color) > maxOccurrences) {
+                    maxOccurrences = colorHistogram.get(color);
+                    mostPrevalentColor = color;
+                }
+            }
+        }
+
+        return javafx.scene.paint.Color.rgb(
+                (mostPrevalentColor >> 16) & 0xFF,
+                (mostPrevalentColor >> 8) & 0xFF,
+                mostPrevalentColor & 0xFF);
+    }
+
+     private static Image removeBackgroundColor(Image originalImage, Color backgroundColor) {
+        int width = (int) originalImage.getWidth();
+        int height = (int) originalImage.getHeight();
+
+        // Create a WritableImage with a transparent background
+        WritableImage processedImage = new WritableImage(width, height);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                Color pixelColor = originalImage.getPixelReader().getColor(x, y);
+
+                // Check if the pixel color is similar to the background color
+                if (isSimilarColor(pixelColor, backgroundColor)) {
+                    processedImage.getPixelWriter().setColor(x, y, Color.TRANSPARENT);
+                } else {
+                    processedImage.getPixelWriter().setColor(x, y, pixelColor);
+                }
+            }
+        }
+
+        return processedImage;
+    }
+
+    private static boolean isSimilarColor(Color color1, Color color2) {
+        // You may need to adjust the threshold based on your specific use case
+        double colorDistanceThreshold = 0.1;
+
+        double distance = Math.sqrt(
+                Math.pow(color1.getRed() - color2.getRed(), 2) +
+                Math.pow(color1.getGreen() - color2.getGreen(), 2) +
+                Math.pow(color1.getBlue() - color2.getBlue(), 2)
+        );
+
+        return distance < colorDistanceThreshold;
+    }
+
+
+    public static ImageView blendImages(Image overlayImage) {
+        // Create ImageViews for the images
+        ImageView baseImageView = new ImageView("/model/resources/result bg w title.png");
+        ImageView overlayImageView = new ImageView(overlayImage);
+        overlayImageView.setFitHeight(overlayImage.getHeight()*1.5);
+        overlayImageView.setFitWidth(overlayImage.getWidth()*1.5);
+
+        // Create a Blend effect
+        Blend blend = new Blend();
+        blend.setMode(BlendMode.MULTIPLY);
+
+        // Set the blend effect to the overlay image
+        overlayImageView.setEffect(blend);
+
+        // Create a StackPane to blend images
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(baseImageView, overlayImageView);
+
+        // Return the blended ImageView
+        return new ImageView(stackPane.snapshot(null, null));
+    }
 
     private static void setLanguagesTermOne(String str) {
 

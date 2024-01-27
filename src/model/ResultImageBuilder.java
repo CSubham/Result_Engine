@@ -10,6 +10,7 @@ import javax.imageio.ImageIO;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Label;
@@ -998,7 +999,6 @@ public class ResultImageBuilder {
 
         return stackPane;
     }
-
     private String addLeadingZero(int digit) {
         if (digit == -1)
             return "";
@@ -1033,6 +1033,20 @@ public class ResultImageBuilder {
         return row;
     }
 
+    public static Image captureVBoxImage(VBox vbox) {
+        // Create a SnapshotParameters instance
+        SnapshotParameters params = new SnapshotParameters();
+
+        // Set the background fill to white (optional)
+        params.setFill(javafx.scene.paint.Color.TRANSPARENT);
+
+        // Capture the snapshot of the VBox
+        WritableImage snapshot = vbox.snapshot(params, null);
+
+        // Convert the WritableImage to Image
+        return SwingFXUtils.toFXImage(SwingFXUtils.fromFXImage(snapshot, null), null);
+    }
+
     public static void captureAndSaveVBoxImage(VBox vbox, String filePath) {
         // Create a SnapshotParameters instance
         SnapshotParameters params = new SnapshotParameters();
@@ -1045,6 +1059,7 @@ public class ResultImageBuilder {
 
         // Save the image to a file
         File file = new File(filePath);
+        
 
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png", file);
