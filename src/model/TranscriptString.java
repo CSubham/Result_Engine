@@ -138,8 +138,7 @@ public class TranscriptString {
 
         } catch (Exception e) {
 
-            System.out.println(e);
-            System.out.println(e);
+            
             subjectNMark = null;
 
         }
@@ -169,8 +168,7 @@ public class TranscriptString {
             }
 
         } catch (Exception e) {
-            // TODO: handle exception
-            System.out.println(e);
+         
             subjectNMark = null;
 
         }

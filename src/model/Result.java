@@ -4,18 +4,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.effect.Blend;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import model.Condition_blocks.Compulsory;
 import model.Condition_blocks.ConditionBlock;
 import model.Condition_blocks.MixedValue;
@@ -255,6 +259,15 @@ public class Result {
         VBox passStatusBox = rib.createPassStatusBox(hasPassed, percentage, student.getPin(), (float) attendance);
         PETable.getChildren().add(passStatusBox);
 
+        // // adding a rect over ptable and pass status box
+
+        // Image temp = ResultImageBuilder.captureVBoxImage(PETable);
+        // ImageView tempo = new ImageView(temp);
+        // StackPane ptableWRect =
+        // ResultImageBuilder.addRectangleOverVBox(PETable,temp.getWidth(),temp.getHeight(),10);
+        // System.out.println(PETable.heightProperty().doubleValue());
+        // PETable = new VBox(ptableWRect);
+
         // the below code is actually meant to done in ResultImageBuilder
 
         HBox joiner = new HBox();
@@ -268,11 +281,7 @@ public class Result {
         VBox remarksRow = rib.getRemarksBox();
         result.getChildren().add(remarksRow);
 
-       
         Scene scene = new Scene(result);
-
-
-
 
         // ResultImageBuilder.captureAndSaveVBoxImage((VBox) scene.getRoot(),
         // saveLocation +"/"+ student.getName() + ".png");
@@ -287,18 +296,18 @@ public class Result {
         // +"/"+ student.getName() + ".png");
         Image finImage = removeBackgroundColor(initialImg, findMostPrevalentColor(initialImg));
         ImageView imageView = blendImages(finImage);
-        
+
         VBox fnl = new VBox();
         fnl.getChildren().addAll(imageView);
         Scene tsc = new Scene(fnl);
-        
+
         ResultImageBuilder.captureAndSaveVBoxImage((VBox) tsc.getRoot(), saveLocation+"/"+ student.getName() + ".png");
+        System.out.println("Result created for pin :"+student.getPin());
 
 
+        }
 
-    }
-
-   
+        
 
     public static javafx.scene.paint.Color findMostPrevalentColor(Image image) {
         PixelReader pixelReader = image.getPixelReader();
@@ -308,7 +317,7 @@ public class Result {
         // Count occurrences of each color using a histogram
         Map<Integer, Integer> colorHistogram = new HashMap<>();
         int maxOccurrences = 0;
-        int mostPrevalentColor = 0;  // Default color (black)
+        int mostPrevalentColor = 0; // Default color (black)
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
@@ -329,7 +338,7 @@ public class Result {
                 mostPrevalentColor & 0xFF);
     }
 
-     private static Image removeBackgroundColor(Image originalImage, Color backgroundColor) {
+    private static Image removeBackgroundColor(Image originalImage, Color backgroundColor) {
         int width = (int) originalImage.getWidth();
         int height = (int) originalImage.getHeight();
 
@@ -357,20 +366,18 @@ public class Result {
 
         double distance = Math.sqrt(
                 Math.pow(color1.getRed() - color2.getRed(), 2) +
-                Math.pow(color1.getGreen() - color2.getGreen(), 2) +
-                Math.pow(color1.getBlue() - color2.getBlue(), 2)
-        );
+                        Math.pow(color1.getGreen() - color2.getGreen(), 2) +
+                        Math.pow(color1.getBlue() - color2.getBlue(), 2));
 
         return distance < colorDistanceThreshold;
     }
-
 
     public static ImageView blendImages(Image overlayImage) {
         // Create ImageViews for the images
         ImageView baseImageView = new ImageView("/model/resources/result bg w title.png");
         ImageView overlayImageView = new ImageView(overlayImage);
-        overlayImageView.setFitHeight(overlayImage.getHeight()*1.5);
-        overlayImageView.setFitWidth(overlayImage.getWidth()*1.5);
+        overlayImageView.setFitHeight(overlayImage.getHeight() * 1.5);
+        overlayImageView.setFitWidth(overlayImage.getWidth() * 1.5);
 
         // Create a Blend effect
         Blend blend = new Blend();

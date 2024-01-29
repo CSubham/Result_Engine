@@ -64,7 +64,6 @@ public class ResultImageBuilder {
     private ArrayList<Integer> addedSubjectCodes = new ArrayList<>();
 
     private String remarksRow = "/model/ResultImageFxmls/remarks.fxml";
-    private String titleRow = "/model/ResultImageFxmls/term.fxml";
 
     /* PETable variables */
 
@@ -130,7 +129,15 @@ public class ResultImageBuilder {
     private int displayCellStroke = 4;
     private int displayCellLabelLength = displayCellRectLength;
 
+    //pass status box factors
+    private int STLength =0;
+   private int PELength =0;
+   private int PSTLength =0;
+    
+
     private HBox createPERow(String value, int marksOne, int marksTwo, int marksThree) {
+        // incrementing length of the pass status factors
+        PELength += 40;
 
         HBox row = new HBox();
 
@@ -216,6 +223,8 @@ public class ResultImageBuilder {
     }
 
     private HBox createSTRow(String value, int marksOne, int marksTwo, int marksThree) {
+        // incrementing length of the pass status factors
+        STLength+= 40;
 
         HBox row = new HBox();
 
@@ -312,7 +321,7 @@ public class ResultImageBuilder {
         rectRow.getChildren().add(row);
 
         VBox finalRemarks = new VBox();
-        finalRemarks.getChildren().add(addRectangleOverVBox(rectRow, (double) 1358, (double) 250, (double) 3));
+        finalRemarks.getChildren().add(addRectangleOverVBox(rectRow, (double) 1358, (double) 333, (double) 3));
 
         return finalRemarks;
 
@@ -397,6 +406,7 @@ public class ResultImageBuilder {
 
     public VBox createPassStatusBox(boolean hasPassed, HashMap<Integer, Float> percentage, int pin, float attendance) {
 
+        PSTLength = Math.abs(STLength-PELength);
         // passed or fail
         String result = "RESULT : " + ((hasPassed == true) ? "PASSED" : "FAILED");
 
@@ -429,13 +439,18 @@ public class ResultImageBuilder {
         addChild(rowHolder, positionRow);
         addChild(rowHolder, percentageRow);
 
-        StackPane statusBox = addRectangleOverVBox(rowHolder, (double) 585, (double) 200, 3);
+        //PST LENGTH
+        StackPane statusBox = addRectangleOverVBox(rowHolder, (double) 585, (double) PSTLength+95, 2);
+        
+
+
         VBox rectStatusBox = new VBox();
         rectStatusBox.getChildren().add(statusBox);
         return rectStatusBox;
 
     }
 
+ 
     // div and attendance box
     public VBox createAttendanceAndDivBox(boolean hasPassed, HashMap<Integer, Float> percentage, int pin,
             float attendance) {
@@ -559,6 +574,7 @@ public class ResultImageBuilder {
             int marksThree = getMarksThree(key);
 
             HBox row = createPERow(subjectName, marksOne, marksTwo, marksThree);
+            PELength += 40;
             addChild(table, row);
 
         }
@@ -601,6 +617,9 @@ public class ResultImageBuilder {
                 displayCellRectLength,
                 displayCellLabelLength);
 
+                // pass box status length
+                STLength+= 40;
+
         addChild(table, addChild(new HBox(), majorCell));
 
         cellLabelAlignment = TextAlignment.LEFT;
@@ -623,6 +642,8 @@ public class ResultImageBuilder {
             if (compoundSubject != null) {
                 HBox compoundRow = createCompoundSubjectRow(compoundSubject);
                 addChild(table, compoundRow);
+                 // pass box status length
+                 STLength+= 40*compoundSubject.size();
                 continue;
 
             }
@@ -663,6 +684,8 @@ public class ResultImageBuilder {
             }
             row = addColToRow(row, avg);
 
+             // pass box status length
+             STLength+= 40;
             addChild(table, row);
 
         }
@@ -680,6 +703,8 @@ public class ResultImageBuilder {
                         displayCellRectLength,
                         displayCellLabelLength);
 
+                         // pass box status length
+                STLength+= 40;
                 addChild(table, addChild(new HBox(), minorCell));
 
             }
@@ -702,6 +727,8 @@ public class ResultImageBuilder {
                 if (compoundSubject != null) {
                     HBox compoundRow = createCompoundSubjectRow(compoundSubject);
                     addChild(table, compoundRow);
+                     // pass box status length
+                STLength+= 40*compoundSubject.size();
                     continue;
 
                 }
@@ -740,6 +767,8 @@ public class ResultImageBuilder {
                     averagedSubjectsValue.get(key);
                 }
                 row = addColToRow(row, avg);
+                 // pass box status length
+                 STLength+= 40;
 
                 addChild(table, row);
 
