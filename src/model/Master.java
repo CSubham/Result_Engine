@@ -12,173 +12,19 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
-
-import javafx.application.Application;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import model.Condition_blocks.Compulsory;
 import model.Condition_blocks.ConditionBlock;
 import model.enums.Operator;
 import model.enums.SubjectSignificance;
 
-public class Master extends Application {
+public class Master {
     private static DataBridge databridge = new DataBridge();
 
     static {
         databridge.connectDatabase();
     }
 
-    public static void main(String[] args) throws Exception {
-
-        // databridge.executeQuery("create table students(pin int primary key
-        // unique,class varchar(3),data varchar(250));");
-        // databridge.executeQuery("create table subjects(subject_name
-        // varchar(30),subject_code int primary key unique );");
-        // databridge.executeQuery("create table term_data( pin int primary key
-        // unique,term_one varchar(250), term_two varchar(250), term_three varchar(250)
-        // );");
-        // databridge.executeQuery("drop table grade_subject_list");
-        // databridge.executeQuery("CREATE TABLE grade_subject_list (grade int PRIMARY
-        // KEY, subject_list varchar(250));");
-
-        // String[] subjectNames =
-        // {"english_language","english_literature","spelling_dictation","general_knowledge","hindi","tibetan","bengali","nepali",
-        // "mathematics","science","value_education","social_studies","computer_science","reading",
-        // "recitation","art","physics","chemistry","biology","computer_application","commercial_application","physical_education",
-        // "accountancy","commerce","economics","sociology","history","geography","pol_science","supw","business_studies",
-        // "conduct","physical_training","singing","order_n_neatness","handwriting","attendance","co_curricular_activities",
-        // "spoken_language","personal_grooming","hobby","library_reading","cooperation",
-        // };
-
-        // try {
-        // String sql = "INSERT INTO subjects (subject_code, subject_name) VALUES (?,
-        // ?)";
-        // PreparedStatement statement =
-        // databridge.getConnection().prepareStatement(sql);
-
-        // // Loop through the array to insert data into the table
-        // for (int i = 0; i < subjectNames.length; i++) {
-        // statement.setInt(1, i + 1); // Assuming the subject_code starts from 1
-        // statement.setString(2, subjectNames[i]);
-        // statement.executeUpdate();
-        // }
-
-        // System.out.println("Data inserted successfully!");
-        // } catch (SQLException e) {
-        // e.printStackTrace();
-        // }
-
-        // TESTING
-
-        // System.out.println("tString :"+ tString);
-
-        // HashMap<Integer,String> hmap = transcriptString.convertToHashMap(tString);
-
-        // printHashMap(hmap);
-        // System.out.println(transcriptString.getName(tString));
-        // System.out.println(transcriptString.getRollNo(tString));
-
-        // // enterStudentData(student);
-        // updateStudentData(student);
-
-        // ResultSet resultSet = databridge.fetchQueryData("select * from
-        // grade_subject_list;");
-        // printResultSet(resultSet);
-        // insertIntoTermTwo();
-
-        // ResultSet resultSet2 = databridge.fetchQueryData("select * from subjects;");
-        // printResultSet(resultSet2);
-
-        // String query = "SELECT table_name FROM information_schema.tables WHERE
-        // table_schema = 'public' AND table_type = 'BASE TABLE'";
-        // ResultSet resultSet = databridge.fetchQueryData( query);
-
-        // // Iterate through the result set and print table names
-        // while (resultSet.next()) {
-        // String tableName = resultSet.getString("table_name");
-        // System.out.println("Table Name: " + tableName);
-        // }
-
-        // HashMap<Integer, Integer> subjects = new HashMap<>();
-        // subjects.put(01, 45);
-        // subjects.put(02, 45);
-        // subjects.put(04,100);
-        // subjects.put(05, 30);
-        // subjects.put(06, 46);
-        // subjects.put(07, 60);
-        // subjects.put(9, 78);
-        // subjects.put(10, 90);
-        // subjects.put(11, 30);
-        // subjects.put(8, 45);
-
-        // Student student = new Student(45, 0401, "Subham Rai The Third", subjects,
-        // "1a");
-
-        // enterStudentData(student);
-        // Result result = new Result(Master.subjects);
-        // System.out.println(result.calculateResultPrimary(student));
-
-        // databridge.executeQuery("insert into subjects values('bengali',44);");
-
-        // HashMap<Integer, SubjectSignificance> gradeSubjectList = new HashMap<>();
-        // gradeSubjectList.put(01, SubjectSignificance.EVALUATION);
-        // gradeSubjectList.put(02, SubjectSignificance.EVALUATION);
-        // gradeSubjectList.put(03, SubjectSignificance.EVALUATION);
-        // gradeSubjectList.put(04, SubjectSignificance.EVALUATION);
-        // gradeSubjectList.put(05, SubjectSignificance.EVALUATION);
-        // gradeSubjectList.put(06, SubjectSignificance.EVALUATION);
-        // gradeSubjectList.put(07, SubjectSignificance.EVALUATION);
-        // gradeSubjectList.put(8, SubjectSignificance.EVALUATION);
-        // gradeSubjectList.put(9, SubjectSignificance.EVALUATION);
-        // gradeSubjectList.put(10, SubjectSignificance.EVALUATION);
-        // gradeSubjectList.put(11, SubjectSignificance.EVALUATION);
-        // gradeSubjectList.put(12, SubjectSignificance.EVALUATION);
-
-        // updateGradeSubjectList(1, gradeSubjectList);
-        // // String str = new Subject().generateSubjectList(gradeSubjectList);
-        // System.out.println(str);
-
-        // printHashMap(new Subject().subjectListToHashMap(str));
-        // String query = "CREATE TABLE your_table_name (grade INT, condition_object
-        // BYTEA ); ";
-
-        // Condition condition = new Condition();
-        // addNewCondition(condition,1);
-
-        // printDatabaseData();
-
-        // getGradeSubjectList(1);
-        // deleteCondition(1);
-
-        // int[] selectedTerms = { 1, 0, 0 };
-        // makeResult("1a", "pain stacking", selectedTerms, null);
-
-        // Student student = getStudentData(1);
-        // System.out.println(student.getTermOne());
-        // System.out.println(student.getTermTwo());
-        // System.out.println(student.getTermThree());
-
-        launch(args);
-
-    }
-
-    @Override
-    public void start(Stage arg0) throws Exception {
-        int[] selectedTerms = { 1, 0, 0 };
-        makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null, 200,"C:\\Users\\Subham Rai\\Workspace\\Test Folder");
-
-    }
-
-    public static void printHashMap(Map<Integer, Float> hashMap) {
-        for (Map.Entry<Integer, Float> entry : hashMap.entrySet()) {
-            int key = entry.getKey();
-            float value = entry.getValue();
-            System.out.println("Key: " + key + ", Value: " + value);
-        }
-    }
-
-    public static int getDaysAbsentForPin(int pin) {
+    private static int getDaysAbsentForPin(int pin) {
         String query = "SELECT days_absent FROM attendance WHERE pin = ?";
 
         try (PreparedStatement preparedStatement = databridge.getConnection().prepareStatement(query)) {
@@ -211,7 +57,7 @@ public class Master extends Application {
 
     }
 
-    public static void printResultSet(ResultSet resultSet) {
+    private static void printResultSet(ResultSet resultSet) {
         try {
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -874,7 +720,8 @@ public class Master extends Application {
             double attendance = 100.00 - ((((double) daysAbsent / (double) outOf)) * 100.00);
 
             // store file and store in created folder
-            Result.createResultImageFile(student, title, condition, gradeSubjectList, subjects, percentage, attendance,saveLocation);
+            Result.createResultImageFile(student, title, condition, gradeSubjectList, subjects, percentage, attendance,
+                    saveLocation);
 
             // term data needs to be cleared after every sub operation for next use
             termData.clear();
@@ -883,7 +730,6 @@ public class Master extends Application {
 
     }
 
-   
     private static Student setAverageSubject(Student student, HashMap<Integer, SubjectSignificance> gradeSubjectList,
             float[] averagerValues) {
         AdvancedTermAverager advancedTermAverager = new AdvancedTermAverager();
