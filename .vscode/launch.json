@@ -40,7 +40,9 @@
             "name": "UIMaster",
             "request": "launch",
             "mainClass": "view.UIMaster",
-            "projectName": "Result_Engine_4386b0b1"
+            "projectName": "Result_Engine_4386b0b1",
+            "vmArgs": "--module-path \"C:/Users/Subham Rai/Workspace/openjfx-21.0.2_windows-x64_bin-sdk/javafx-sdk-21.0.2/lib\" --add-modules javafx.controls,javafx.fxml"
+
         }
     ]
 }
