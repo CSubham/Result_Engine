@@ -124,11 +124,10 @@ public class ResultImageBuilder {
     private int displayCellStroke = 4;
     private int displayCellLabelLength = displayCellRectLength;
 
-    //pass status box factors
-    private int STLength =0;
-   private int PELength =0;
-   private int PSTLength =0;
-    
+    // pass status box factors
+    private int STLength = 0;
+    private int PELength = 0;
+    private int PSTLength = 0;
 
     private HBox createPERow(String value, int marksOne, int marksTwo, int marksThree) {
         // incrementing length of the pass status factors
@@ -219,7 +218,7 @@ public class ResultImageBuilder {
 
     private HBox createSTRow(String value, int marksOne, int marksTwo, int marksThree) {
         // incrementing length of the pass status factors
-        STLength+= 40;
+        STLength += 40;
 
         HBox row = new HBox();
 
@@ -396,12 +395,9 @@ public class ResultImageBuilder {
 
     }
 
-    
-    
-
     public VBox createPassStatusBox(boolean hasPassed, HashMap<Integer, Float> percentage, int pin, float attendance) {
 
-        PSTLength = Math.abs(STLength-PELength);
+        PSTLength = Math.abs(STLength - PELength);
         // passed or fail
         String result = "RESULT : " + ((hasPassed == true) ? "PASSED" : "FAILED");
 
@@ -434,10 +430,8 @@ public class ResultImageBuilder {
         addChild(rowHolder, positionRow);
         addChild(rowHolder, percentageRow);
 
-        //PST LENGTH
-        StackPane statusBox = addRectangleOverVBox(rowHolder, (double) 585, (double) PSTLength+95, 2);
-        
-
+        // PST LENGTH
+        StackPane statusBox = addRectangleOverVBox(rowHolder, (double) 585, (double) PSTLength + 95, 2);
 
         VBox rectStatusBox = new VBox();
         rectStatusBox.getChildren().add(statusBox);
@@ -445,7 +439,6 @@ public class ResultImageBuilder {
 
     }
 
- 
     // div and attendance box
     public VBox createAttendanceAndDivBox(boolean hasPassed, HashMap<Integer, Float> percentage, int pin,
             float attendance) {
@@ -612,8 +605,8 @@ public class ResultImageBuilder {
                 displayCellRectLength,
                 displayCellLabelLength);
 
-                // pass box status length
-                STLength+= 40;
+        // pass box status length
+        STLength += 40;
 
         addChild(table, addChild(new HBox(), majorCell));
 
@@ -637,8 +630,8 @@ public class ResultImageBuilder {
             if (compoundSubject != null) {
                 HBox compoundRow = createCompoundSubjectRow(compoundSubject);
                 addChild(table, compoundRow);
-                 // pass box status length
-                 STLength+= 40*compoundSubject.size();
+                // pass box status length
+                STLength += 40 * compoundSubject.size();
                 continue;
 
             }
@@ -679,8 +672,8 @@ public class ResultImageBuilder {
             }
             row = addColToRow(row, avg);
 
-             // pass box status length
-             STLength+= 40;
+            // pass box status length
+            STLength += 40;
             addChild(table, row);
 
         }
@@ -698,8 +691,8 @@ public class ResultImageBuilder {
                         displayCellRectLength,
                         displayCellLabelLength);
 
-                         // pass box status length
-                STLength+= 40;
+                // pass box status length
+                STLength += 40;
                 addChild(table, addChild(new HBox(), minorCell));
 
             }
@@ -722,8 +715,8 @@ public class ResultImageBuilder {
                 if (compoundSubject != null) {
                     HBox compoundRow = createCompoundSubjectRow(compoundSubject);
                     addChild(table, compoundRow);
-                     // pass box status length
-                STLength+= 40*compoundSubject.size();
+                    // pass box status length
+                    STLength += 40 * compoundSubject.size();
                     continue;
 
                 }
@@ -762,8 +755,8 @@ public class ResultImageBuilder {
                     averagedSubjectsValue.get(key);
                 }
                 row = addColToRow(row, avg);
-                 // pass box status length
-                 STLength+= 40;
+                // pass box status length
+                STLength += 40;
 
                 addChild(table, row);
 
@@ -927,6 +920,31 @@ public class ResultImageBuilder {
     // INCOMPLETE
     private int calculateGradeOnAverage(int value) {
 
+        if (value >= 90 && value <= 100) {
+            return 1;
+
+        } else if (value >= 80 && value <= 89) {
+            return 2;
+        } else if (value >= 70 && value <= 79) {
+            return 3;
+        } else if (value >= 60 && value <= 69) {
+            return 4;
+        } else if (value >= 55 && value <= 59) {
+            return 5;
+        } else if (value >= 50 && value <= 54) {
+            return 6;
+        } else if (value >= 45 && value <= 49) {
+            return 7;
+        } else if (value >= 40 && value <= 44) {
+            return 8;
+        } else if (value >= 35 && value <= 39) {
+            return 9;
+        } else if (value >= 30 && value <= 34) {
+            return 10;
+        } else if (value >= 00 && value <= 29) {
+            return 11;
+        }
+
         return value;
     }
 
@@ -1023,6 +1041,7 @@ public class ResultImageBuilder {
 
         return stackPane;
     }
+
     private String addLeadingZero(int digit) {
         if (digit == -1)
             return "";
@@ -1083,7 +1102,6 @@ public class ResultImageBuilder {
 
         // Save the image to a file
         File file = new File(filePath);
-        
 
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), "png", file);

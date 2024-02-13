@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
+import controller.Control;
+
 public class UIMaster extends Application {
     private static  double screenWidth ;
     private static double screenHeight;
@@ -47,8 +49,11 @@ public class UIMaster extends Application {
 
         stage.getIcons().add(logo);
         stage.setResizable(false);
-        stage.show();
+        // stage.show();
 
+
+        int[] selectedTerms = { 1, 0, 0 };
+        Control.makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null, 200,"C:\\Users\\Subham Rai\\Workspace\\Test Folder");
         
       
     }
