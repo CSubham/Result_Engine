@@ -15,19 +15,17 @@ import java.awt.Toolkit;
 import controller.Control;
 
 public class UIMaster extends Application {
-    private static  double screenWidth ;
+    private static double screenWidth;
     private static double screenHeight;
     // app size factor
-    private static double asf = 0.9;  
+    private static double asf = 0.9;
 
-
-
-    static{
+    static {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screenSize = toolkit.getScreenSize();
         screenWidth = screenSize.getWidth();
         screenHeight = screenSize.getHeight();
-        System.out.println( screenWidth);
+        System.out.println(screenWidth);
     }
 
     public static void main(String[] args) {
@@ -37,11 +35,10 @@ public class UIMaster extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-         HBox root = new HBox();
+        HBox root = new HBox();
 
-        Scene scene = new Scene(root,screenWidth*asf,screenHeight *asf);
-        
-        
+        Scene scene = new Scene(root, screenWidth * asf, screenHeight * asf);
+
         stage.setScene(scene);
         stage.setTitle("Result Engine");
         stage.setResizable(true);
@@ -49,23 +46,17 @@ public class UIMaster extends Application {
 
         stage.getIcons().add(logo);
         stage.setResizable(false);
-        // stage.show();
-
-
+        stage.show();
+        
         int[] selectedTerms = { 1, 0, 0 };
         Control.makeResult("1a", "FIRST TERM PROGRESS REPORT - 2024", selectedTerms, null, 200,"C:\\Users\\Subham Rai\\Workspace\\Test Folder");
-        
-      
     }
 
-    private static void mainScreen(){
-        //sidewise storing of scene display and navigation bar
-        
+    private static void mainScreen() {
+        // sidewise storing of scene display and navigation bar
+
         // base element
         AnchorPane anchorPane = new AnchorPane();
     }
-
-
-
 
 }
