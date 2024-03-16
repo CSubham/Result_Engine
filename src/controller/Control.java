@@ -44,7 +44,7 @@ public class Control {
         Master.incrementStudentData(student);
     }
 
-    public static void enterStudentData(int pin, int daysAbsent) {
+    public static void enterStudentAttendance(int pin, int daysAbsent) {
         Master.enterAttendance(pin, daysAbsent);
     }
 
@@ -57,9 +57,7 @@ public class Control {
         Master.deleteStudentData(pin);
     }
 
-    public static void incrementStudentData(Student stu) throws SQLException {
-        Master.incrementStudentData(stu);
-    }
+   
     // insert data present in Table: students, Column:data into term_one, term_two,
     // term_three
     // of Table : term_data
@@ -84,7 +82,7 @@ public class Control {
     }
 
     // pointer points to another column
-    public static void enterGradeSubjectList(int grade, int pointer) {
+    public static void addNewGradeSubjectList(int grade, int pointer) {
         Master.enterGradeSubjectList(grade, pointer);
     }
 

@@ -401,15 +401,20 @@ public class Master {
 
     public static void insertIntoTermOne() {
         insertTermData("term_one");
+        System.out.println("inserted");
     }
 
     public static void insertIntoTermTwo() {
         insertTermData("term_two");
+        System.out.println("inserted");
+
 
     }
 
     public static void insertIntoTermThree() {
         insertTermData("term_three");
+        System.out.println("inserted");
+
 
     }
 

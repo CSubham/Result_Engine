@@ -552,14 +552,14 @@ public class ResultImageBuilder {
             String subjectName = subjects.get(key);
 
             // term one value
-            int marksOne = getMarksOne(key);
+            int marksOne = calculateGradeOnAverage(getMarksOne(key));
 
             // term two value
-            int marksTwo = getMarksTwo(key);
+            int marksTwo = calculateGradeOnAverage(getMarksTwo(key));
 
             // term three value
 
-            int marksThree = getMarksThree(key);
+            int marksThree = calculateGradeOnAverage(getMarksThree(key));
 
             HBox row = createPERow(subjectName, marksOne, marksTwo, marksThree);
             PELength += 40;
@@ -670,6 +670,7 @@ public class ResultImageBuilder {
             if (averagedSubjectsValue != null) {
                 averagedSubjectsValue.get(key);
             }
+            //average and gov
             row = addColToRow(row, avg);
 
             // pass box status length
@@ -917,7 +918,6 @@ public class ResultImageBuilder {
 
     }
 
-    // INCOMPLETE
     private int calculateGradeOnAverage(int value) {
 
         if (value >= 90 && value <= 100) {

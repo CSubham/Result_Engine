@@ -177,6 +177,7 @@ public class AdvancedTermAverager {
 
         }
 
+
         String averageTString = transcriptObj.generate(average, transcriptObj.getName(tString3),
                 transcriptObj.getRollNo(tString3));
 
