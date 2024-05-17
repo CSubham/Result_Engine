@@ -2,6 +2,8 @@ package controller;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+
+
 import model.Condition;
 import model.Master;
 import model.Student;
@@ -9,6 +11,12 @@ import model.enums.SubjectSignificance;
 
 public class Control {
 
+
+    public static boolean login(String username, String password) throws SQLException{
+        return Master.login(username, password);
+
+    }
+    
     
 
     // make the results of provided grade (Class,section)

@@ -12,16 +12,34 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 import model.Condition_blocks.Compulsory;
 import model.Condition_blocks.ConditionBlock;
 import model.enums.Operator;
 import model.enums.SubjectSignificance;
 
 public class Master {
-    private static DataBridge databridge = new DataBridge();
+    private static DataBridge databridge ;
 
-    static {
-        databridge.connectDatabase();
+    public static void setDataBridge (DataBridge db){
+        databridge = db;
+
+    }
+    
+
+    //takes username and password and checks whether user creds are matching
+    public static boolean login(String username , String password) throws SQLException{
+
+        String str= "";
+        String query = "SELECT password FROM login_info WHERE username = '"+username+"';";
+        ResultSet rs = databridge.fetchQueryData(query); 
+        if(rs.next()){
+            str = rs.getString("password");
+
+            
+        }       
+        if(password.compareTo(str)== 0 )return true;
+        return false;
     }
 
     private static int getDaysAbsentForPin(int pin) {
@@ -88,7 +106,7 @@ public class Master {
 
         // Step 2: Specify the tables you want to print
         String[] tablesToPrint = { "students", "subjects", "term_data", "grade_subject_list", "conditions",
-                "attendance" };
+                "attendance" ,"user","login_info"};
 
         for (String tableName : tablesToPrint) {
             System.out.println("Table: " + tableName);

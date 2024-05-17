@@ -7,8 +7,17 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DataBridge {
+    public static final String RESET = "\u001B[0m";
+    public static final String BLACK = "\u001B[30m";
+    public static final String RED = "\u001B[31m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String BLUE = "\u001B[34m";
+    public static final String PURPLE = "\u001B[35m";
+    public static final String CYAN = "\u001B[36m";
+    public static final String WHITE = "\u001B[37m";
 
-    private Connection connection = null;
+    private Connection connection ;
 
     // establishes connection with the database.
 
@@ -33,14 +42,14 @@ public class DataBridge {
             connection = DriverManager.getConnection(url, user, password);
 
             if (connection != null) {
-                System.out.println("Database connection status : Positive");
+                System.err.println(GREEN + "Database connection status : Positive" + RESET);
             }
         } catch (ClassNotFoundException e) {
             System.err.println(
                     "Could not find the PostgreSQL JDBC driver. Please include the JDBC driver in your project, \n or download it from the website.");
             e.printStackTrace();
         } catch (SQLException e) {
-            System.err.println("Database connection status : Negative");
+            System.err.println(RED + "Database connection status : Negative" + RESET);
             e.printStackTrace();
         }
 
@@ -51,6 +60,8 @@ public class DataBridge {
     public void executeQuery(String query) {
         Statement statement;
         try {
+        
+
             statement = getConnection().createStatement();
             statement.executeUpdate(query);
             System.out.println("Query : Executed");
@@ -64,11 +75,12 @@ public class DataBridge {
     }
 
     // fetches a single result set for the given data
-
-    public ResultSet fetchQueryData(String query) {
+    public ResultSet fetchQueryData(String query)  {
         Statement statement;
         ResultSet resultSet = null;
         try {
+        
+        
             statement = getConnection().createStatement();
             resultSet = statement.executeQuery(query);
 
@@ -82,5 +94,11 @@ public class DataBridge {
     public Connection getConnection() {
         return connection;
     }
+
+    public void setConnection(Connection connection){
+        this.connection = connection;
+    }
+
+   
 
 }
