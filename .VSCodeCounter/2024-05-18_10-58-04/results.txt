@@ -1,0 +1,89 @@
+Date : 2024-05-18 10:58:04
+Directory : c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine
+Total : 47 files,  3980 codes, 386 comments, 1231 blanks, all 5597 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Java     |         39 |      3,782 |        379 |      1,201 |      5,362 |
+| XML      |          5 |        164 |          0 |         16 |        180 |
+| CSS      |          2 |         24 |          7 |          5 |         36 |
+| Markdown |          1 |         10 |          0 |          9 |         19 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                          | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                             |         47 |      3,980 |        386 |      1,231 |      5,597 |
+| . (Files)                                                                                                     |          1 |         10 |          0 |          9 |         19 |
+| bin                                                                                                           |         21 |        611 |          7 |          8 |        626 |
+| bin\model                                                                                                     |         16 |        550 |          0 |          0 |        550 |
+| bin\model (Files)                                                                                             |          9 |        467 |          0 |          0 |        467 |
+| bin\model\Condition_blocks                                                                                    |          5 |         53 |          0 |          0 |         53 |
+| bin\model\enums                                                                                               |          2 |         30 |          0 |          0 |         30 |
+| bin\view                                                                                                      |          5 |         61 |          7 |          8 |         76 |
+| src                                                                                                           |         25 |      3,359 |        379 |      1,214 |      4,952 |
+| src\controller                                                                                                |          1 |         90 |         20 |         39 |        149 |
+| src\model                                                                                                     |         23 |      2,780 |        335 |      1,070 |      4,185 |
+| src\model (Files)                                                                                             |         12 |      2,490 |        320 |        985 |      3,795 |
+| src\model\Condition_blocks                                                                                    |          5 |        122 |         15 |         68 |        205 |
+| src\model\ResultImageFxmls                                                                                    |          4 |        156 |          0 |         13 |        169 |
+| src\model\enums                                                                                               |          2 |         12 |          0 |          4 |         16 |
+| src\view                                                                                                      |          1 |        489 |         24 |        105 |        618 |
++---------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                      | language | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\README.md                                           | Markdown |         10 |          0 |          9 |         19 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\AdvancedTermAverager.class                | Java     |         72 |          0 |          0 |         72 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\Condition.class                           | Java     |         13 |          0 |          0 |         13 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\ConditionReader.class                     | Java     |         70 |          0 |          0 |         70 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\Condition_blocks\Compulsory.class         | Java     |         11 |          0 |          0 |         11 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\Condition_blocks\ConditionBlock.class     | Java     |          2 |          0 |          0 |          2 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\Condition_blocks\Exception.class          | Java     |         11 |          0 |          0 |         11 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\Condition_blocks\MixedValue.class         | Java     |          8 |          0 |          0 |          8 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\Condition_blocks\Value.class              | Java     |         21 |          0 |          0 |         21 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\DataBridge.class                          | Java     |         24 |          0 |          0 |         24 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\Master.class                              | Java     |         83 |          0 |          0 |         83 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\Result.class                              | Java     |         77 |          0 |          0 |         77 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\Student.class                             | Java     |         26 |          0 |          0 |         26 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\Subject.class                             | Java     |         41 |          0 |          0 |         41 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\TranscriptString.class                    | Java     |         61 |          0 |          0 |         61 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\enums\Operator.class                      | Java     |         15 |          0 |          0 |         15 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\model\enums\SubjectSignificance.class           | Java     |         15 |          0 |          0 |         15 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\view\Buttons.css                                | CSS      |         18 |          4 |          3 |         25 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\view\MainScreen.css                             | CSS      |          6 |          3 |          2 |         11 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\view\MainScreen.fxml                            | XML      |          8 |          0 |          3 |         11 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\view\MainScreenController.class                 | Java     |          6 |          0 |          0 |          6 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\bin\view\UIMaster.class                             | Java     |         23 |          0 |          0 |         23 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\controller\Control.java                         | Java     |         90 |         20 |         39 |        149 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\AdvancedTermAverager.java                 | Java     |        134 |         12 |         68 |        214 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\Condition.java                            | Java     |         15 |          1 |         11 |         27 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\ConditionComposer.java                    | Java     |         40 |          0 |         25 |         65 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\ConditionReader.java                      | Java     |        151 |          3 |         59 |        213 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\Condition_blocks\Compulsory.java          | Java     |         33 |         10 |         18 |         61 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\Condition_blocks\ConditionBlock.java      | Java     |          3 |          0 |          4 |          7 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\Condition_blocks\Exception.java           | Java     |         12 |          0 |         17 |         29 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\Condition_blocks\MixedValue.java          | Java     |         26 |          0 |         10 |         36 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\Condition_blocks\Value.java               | Java     |         48 |          5 |         19 |         72 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\DataBridge.java                           | Java     |         65 |          9 |         31 |        105 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\Master.java                               | Java     |        675 |         89 |        241 |      1,005 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\Printer.java                              | Java     |         54 |          9 |         14 |         77 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\Result.java                               | Java     |        356 |         58 |        120 |        534 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\ResultImageBuilder.java                   | Java     |        701 |        126 |        297 |      1,124 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\ResultImageFxmls\personal_evaluation.fxml | XML      |         44 |          0 |          3 |         47 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\ResultImageFxmls\remarks.fxml             | XML      |         28 |          0 |          3 |         31 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\ResultImageFxmls\subjects.fxml            | XML      |         56 |          0 |          3 |         59 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\ResultImageFxmls\term_column.fxml         | XML      |         28 |          0 |          4 |         32 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\Student.java                              | Java     |         93 |          1 |         28 |        122 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\Subject.java                              | Java     |         92 |          5 |         32 |        129 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\TranscriptString.java                     | Java     |        114 |          7 |         59 |        180 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\enums\Operator.java                       | Java     |          6 |          0 |          2 |          8 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\model\enums\SubjectSignificance.java            | Java     |          6 |          0 |          2 |          8 |
+| c:\Users\Subham Rai\Workspace\Java\Projects\Result_Engine\src\view\CLI.java                                   | Java     |        489 |         24 |        105 |        618 |
+| Total                                                                                                         |          |      3,980 |        386 |      1,231 |      5,597 |
++---------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

@@ -5,8 +5,7 @@ import java.util.HashMap;
 public class TranscriptString {
     // reserved keys : "n","rn","s","sl","tl"
 
-    public TranscriptString() {
-    }
+    
 
     // generate transcript string
 
